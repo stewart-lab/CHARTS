@@ -3,8 +3,17 @@ import h5py
 import numpy as np
 import json
 from os.path import join
+import pkg_resources as pr
 
-with open('config.json', 'r') as f:
+resource_package = __name__
+
+
+CONFIG_F = pr.resource_filename(
+    resource_package,
+    'config.json'
+)
+
+with open(CONFIG_F, 'r') as f:
     config = json.load(f)
     LOC = config['charts_db']
     DB_LOC = join(LOC, 'charts.h5')

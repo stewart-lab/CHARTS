@@ -1,0 +1,152 @@
+#
+
+configfile: 'config.json'
+
+TUMORS = [
+    'PJ016',
+    'PJ017',
+    'PJ018',
+    'PJ025',
+    'LX653',
+    'LX676',
+    'LX682',
+    'GSE146026.5'
+]
+ALIGN_TUMORS = []
+for i in range(len(TUMORS)-1):
+    for j in range(i+1,len(TUMORS)):
+        ALIGN_TUMORS.append(
+            (TUMORS[i], TUMORS[j])
+        )
+
+rule cluster:
+    input:
+        '../../charts.h5'
+    output:
+        'cluster_log.txt'
+    run:
+        #cmd='python cluster.py -w -r 4.0 {input}'
+        cmd='python cluster.py -r 4.0 {input}'
+        shell(cmd)
+
+rule dim_reduc:
+    input:
+        '../../charts.h5'
+    run:
+        cmd='python dim_reduc_per_tumor.py {input}'
+        shell(cmd)
+
+
+rule cell_type:
+    input:
+        '../../charts.h5'
+    run:
+        #cmd='python cell_type_classification.py -w {input}'
+        cmd='python cell_type_classification.py {{input}} {tmp}/cello_models'.format(
+            tmp=config['tmp_dir']
+        )
+        shell(cmd)
+
+
+rule gsva_cancersea:
+    input:
+        '../../charts.h5'
+    run:
+        #cmd='python gsva.py -w {input} ./gene_sets/CancerSEA.gmt cancersea'
+        cmd='python gsva.py {{input}} {db_loc}/gene_sets/CancerSEA.gmt cancersea'.format(
+            db_loc=config['db_loc']
+        )
+        shell(cmd)        
+
+
+rule gsva_hallmark:
+    input:
+        '../../charts.h5'
+    run:
+        #cmd='python gsva.py -w {input} ./gene_sets/h.all.v7.1.symbols.gmt hallmark'
+        cmd='python gsva.py {input} {db_loc}/gene_sets/h.all.v7.1.symbols.gmt hallmark'.format(
+            db_loc=config['db_loc']
+        )
+        shell(cmd)
+
+
+rule integration:
+    input:
+        '../../charts.h5'
+    run:
+        cmds=[
+            'python integration.py {tum_1} {tum_2} {{input}}'.format(
+                tum_1=tum_pair[0],
+                tum_2=tum_pair[1]
+            ) 
+            for tum_pair in ALIGN_TUMORS
+        ]
+        for c in cmds:
+            shell('echo "{}"'.format(c))
+            shell(c)
+
+
+rule classify_malignant_glioma:
+    input:
+        '../../charts.h5'
+    run:
+        c='python classify_malignant.py -w -l {log}/log ../../charts.h5 PJ016,PJ017,PJ018,PJ025,PJ030,PJ032,PJ035,PJ048 GSE103224'.format(
+            config['log_dir']
+        )
+        shell('echo "{}"'.format(c))
+        shell(c)
+
+
+rule classify_malignant_lung:
+    input:
+        '../../charts.h5'
+    run:
+        c='python classify_malignant.py -w -l ./log ../../charts.h5 LX653,LX661,LX675,LX676,LX679,LX680,LX682,LX684 GSE123904'
+        shell('echo "{}"'.format(c))
+        shell(c)
+
+
+rule classify_malignant_ovarian:
+    input:
+        '../../charts.h5'
+    run:
+        c='python classify_malignant.py -w -l ./log ../../charts.h5 GSE146026.1,GSE146026.2,GSE146026.3,GSE146026.4,GSE146026.5,GSE146026.6 GSE146026'
+        shell('echo "{}"'.format(c))
+        shell(c)
+
+
+rule classify_malignant_GSE72056: # Melanoma
+    input:
+        '../../charts.h5'
+    run:
+        c = 'python classify_malignant.py -w -l ./log ../../charts.h5 GSE72056.58,GSE72056.59,GSE72056.60,GSE72056.65,GSE72056.67,GSE72056.71,GSE72056.72,GSE72056.74,GSE72056.75,GSE72056.78,GSE72056.79,GSE72056.80,GSE72056.81,GSE72056.82,GSE72056.84,GSE72056.88,GSE72056.89,GSE72056.94 GSE72056'
+        shell('echo "{}"'.format(c))
+        shell(c)
+
+
+rule classify_malignant_GSE103322: # Head and neck cancer
+    input:
+        '../../charts.h5'
+    run:
+        c = 'python classify_malignant.py -w -l ./log ../../charts.h5 GSE103322.10,GSE103322.12,GSE103322.13,GSE103322.16,GSE103322.17,GSE103322.18,GSE103322.20,GSE103322.22,GSE103322.23,GSE103322.24,GSE103322.25,GSE103322.26,GSE103322.28,GSE103322.5,GSE103322.6,GSE103322.7,GSE103322.8 GSE103322'
+        shell('echo "{}"'.format(c))
+        shell(c)
+
+rule classify_malignant_GSE111672: # Pancreatic cancer
+    input:
+        '../../charts.h5'
+    run:
+        c = 'python classify_malignant.py -w -l ./log ../../charts.h5 GSE111672.A,GSE111672.B GSE111672'
+        shell('echo "{}"'.format(c))
+        shell(c)
+
+
+rule gsva_compare_cluster_hallmark:
+    input:
+        '{}/charts.h5'.format(config['db_loc'])
+    run:
+        c = 'python gsva_compare_clust.py {{input}} hallmark {db_loc}/gene_sets/h.all.v7.1.symbols.gmt'.format(
+            db_loc=config['db_loc']
+        )
+        shell('echo "{}"'.format(c))
+        shell(c)

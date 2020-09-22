@@ -2,18 +2,21 @@ import pandas as pd
 import h5py
 import numpy as np
 import json
-
+from os.path import join
 
 with open('config.json', 'r') as f:
     config = json.load(f)
-    DB_LOC = config['db_loc']
-    META_LOC = config['meta_loc']
-    SUMMARY_LOC = config['summary_loc']
+    LOC = config['charts_db']
+    DB_LOC = join(LOC, 'charts.h5')
+    META_LOC = join(LOC, 'tumor_metadata.json')
+    SUMMARY_LOC = join(LOC, 'data_summary.tsv')
+
 
 def get_tumor_meta(tumor):
     with open(META_LOC, 'r') as f:
         j = json.load(f)
     return j[tumor]
+
 
 def load_tumor_gene_names(tumor):
     with h5py.File(DB_LOC, 'r') as f:

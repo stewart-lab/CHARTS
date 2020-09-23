@@ -60,6 +60,12 @@ Each tumor's expression matrix is stored separately in `charts_db/charts.h5`.  T
 
 These datasets may be populated using your favorite programming language. We use Python's [h5py](http://www.h5py.org) package for dealing with HDF5 files. 
 
+#### Add the metadata for new tumors
+
+For each new tumor added to the dataset, update the tumor metadata file located at `charts_db/tumor_metadata.json` to include information describing this tumor. This JSON file maps each tumor name to its characteristics.  Currently, the following entries are required for each tumor:
+* `cancer_type`: An english description of the cancer type (e.g. melanoma).
+* `cancer_type_abbrev`: The TCGA abbreviation for the cancer type (from [https://gdc.cancer.gov/resources-tcga-users/tcga-code-tables/tcga-study-abbreviations](https://gdc.cancer.gov/resources-tcga-users/tcga-code-tables/tcga-study-abbreviations)).
+
 #### Running the computational pipeline
 
 Once the data is loaded in the database, the CHARTS pipeline can then be executed. The CHARTS pipeline is implemented via the Snakemake pipeline specified in `charts_pipeline/Snakefile`.

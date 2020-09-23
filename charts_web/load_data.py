@@ -27,6 +27,12 @@ def get_tumor_meta(tumor):
     return j[tumor]
 
 
+def get_all_tumors():
+    with h5py.File(DB_LOC, 'r') as f:
+        tums = list(f['per_tumor'].keys())
+        return tums
+
+
 def load_tumor_gene_names(tumor):
     with h5py.File(DB_LOC, 'r') as f:
         return set([

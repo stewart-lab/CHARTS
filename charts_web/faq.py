@@ -35,7 +35,7 @@ def build_layout():
                             how one can go about processing data with the same pipeline used to process the
                             datasets exposed by CHARTS, please see the
                             """,
-                            html.A("GitHub repository", href=""),
+                            html.A("GitHub repository", href="https://github.com/stewart-lab/CHARTS"),
                             "."
                         ])
                     ]),

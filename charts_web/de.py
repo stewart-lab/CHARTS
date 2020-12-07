@@ -148,7 +148,9 @@ def build_layout():
                             id='de-table-1',
                             filter_action="native",
                             sort_action="native",
-                            page_size=PAGE_SIZE
+                            page_size=PAGE_SIZE,
+                            export_format='csv',
+                            export_headers='display'
                         )
                     ])
                 ]), 
@@ -204,7 +206,9 @@ def build_layout():
                             id='de-table-2',
                             filter_action="native",
                             sort_action="native",
-                            page_size=PAGE_SIZE
+                            page_size=PAGE_SIZE,
+                            export_format='csv',
+                            export_headers='display'
                         )
                     ])
                 ])  

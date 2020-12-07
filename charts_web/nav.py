@@ -6,6 +6,7 @@ CHARTS_LOGO = "https://github.com/mbernste/cancer-single-cell-biomarker/raw/mast
 
 LAYOUT = dbc.NavbarSimple(
     children=[
+      dbc.NavItem(dbc.NavLink("Explore Data", href="/")),
       dbc.NavItem(dbc.NavLink("About", href="/about")),
       dbc.DropdownMenu(
          nav=True,

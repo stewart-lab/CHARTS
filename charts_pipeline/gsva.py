@@ -34,7 +34,6 @@ def main():
     h5_f = args[0]
     gene_set_f = args[1]
     collection_name = args[2]
-    overwrite = options.overwrite
     out_dir = options.out_dir
 
     the_tumors = set()
@@ -57,8 +56,10 @@ def main():
                 str(x)[2:-1]
                 for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
             ]
-            clusters = f['per_tumor/{}/cluster'.format(tumor)][:]
+            clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
             expression = f['per_tumor/{}/log1_tpm'.format(tumor)][:]
+
+        all_clusts = sorted(set(clusters))
 
         # Map each cluster to its cells
         clust_to_cells = defaultdict(lambda: [])
@@ -105,14 +106,20 @@ def main():
                 int(clust[1:]): df_gsva[clust]
                 for clust in df_gsva.columns
             }
-            cell_scores = []
-            for cell, clust in zip(cells, clusters):
-                cell_scores.append(clust_to_scores[clust])
-            cell_scores = np.array(cell_scores, dtype=np.float32)
+            clust_scores = np.array([
+                clust_to_scores[clust]
+                for clust in all_clusts
+            ], dtype=np.float32)
+            #cell_scores = []
+            #for cell, clust in zip(cells, clusters):
+            #    cell_scores.append(clust_to_scores[clust])
+            #cell_scores = np.array(cell_scores, dtype=np.float32)
 
             with h5py.File(h5_f, 'r+') as f:
                 score_key = '{}_{}_gsva'.format(tumor, collection_name)
                 set_key = '{}_{}_gene_set_name'.format(tumor, collection_name)
+
+                ################## TODO REMOVE ###############################################
                 try:
                     del f['per_tumor/{}/{}_gsva'.format(tumor, collection_name)]
                 except KeyError:
@@ -121,13 +128,23 @@ def main():
                     del f['per_tumor/{}/{}_gene_set_name'.format(tumor, collection_name)]
                 except KeyError:
                     pass
+                ##############################################################################
 
-                f['per_tumor/{}'.format(tumor)].create_dataset(
+                try:
+                    del f['per_tumor/{}/leiden_res_4/{}_gsva'.format(tumor, collection_name)]
+                except KeyError:
+                    pass
+                try:
+                    del f['per_tumor/{}/leiden_res_4/{}_gene_set_name'.format(tumor, collection_name)]
+                except KeyError:
+                    pass
+
+                f['per_tumor/{}/leiden_res_4'.format(tumor)].create_dataset(
                     '{}_gsva'.format(collection_name),
-                    data=cell_scores,
+                    data=clust_scores,
                     compression='gzip'
                 )
-                f['per_tumor/{}'.format(tumor)].create_dataset(
+                f['per_tumor/{}/leiden_res_4'.format(tumor)].create_dataset(
                     '{}_gene_set_name'.format(collection_name),
                     data=np.array([
                         x.encode('utf-8')

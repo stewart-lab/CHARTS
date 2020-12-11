@@ -9,6 +9,7 @@ import os
 from os.path import join
 import dill
 import numpy as np
+import json
 
 sys.path.append('../../../CellO')
 
@@ -22,6 +23,11 @@ def main():
 
     h5_f = args[0]
     model_dir = args[1]
+    tumor_params_f = args[2]
+
+    with open(tumor_params_f, 'r') as f:
+        tumor_params = json.load(f)
+    
     overwrite = options.overwrite
 
     sc.settings.verbosity = 3
@@ -40,6 +46,8 @@ def main():
     print(the_tumors)
 
     for tumor in the_tumors:
+        if tumor == 'GSE103322.7':
+            continue # TODO REMOVE!!!!
         print("Classifying cell types for tumor {}".format(tumor))
         with h5py.File(h5_f, 'r') as f:
             cells = [
@@ -57,7 +65,9 @@ def main():
                     for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
                 ]
             expression = f['per_tumor/{}/log1_tpm'.format(tumor)][:]
-            clusters = f['per_tumor/{}/cluster'.format(tumor)][:]
+            clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+
+        all_clusts = sorted(set(clusters))
 
         # Create expression AnnData object
         ad = AnnData(
@@ -80,7 +90,12 @@ def main():
                 dill.dump(mod, f)
 
         units = 'LOG1_TPM'
-        cell_to_cluster = None # TODO
+        
+        # Get the anatomical entities to filter for the current tumor
+        if tumor in tumor_params:
+            filter_anatomical_terms = tumor_params[tumor]['exclude_anatomical_terms_from_cell_types']
+        else:
+            filter_anatomical_terms = None
 
         results_df, finalized_binary_results_df, ms_results_df = CellO.predict(
             ad,
@@ -88,7 +103,8 @@ def main():
             mod,
             assay='3_PRIME',
             algo='IR',
-            cell_to_cluster=cell_to_cluster
+            cell_to_cluster=cell_to_cluster,
+            remove_anatomical_subterms=filter_anatomical_terms
         )
 
         results_df.columns = [
@@ -104,15 +120,36 @@ def main():
             for x in ms_results_df['most_specific_cell_type']
         ]
 
+        # Map each cluster to its predicted cell type
+        clust_to_pred_cell_type = {
+            cell_to_cluster[cell]: pred
+            for cell, pred in zip(ms_results_df.index, ms_results_df['most_specific_cell_type'])
+        }
         cell_types_predicted = np.array([
-            x.encode('utf-8')
-            for x in ms_results_df['most_specific_cell_type']
+            clust_to_pred_cell_type[clust].encode('utf-8')
+            for clust in all_clusts
         ])
+        
+
+        # Map each cluster to its cell type probabilities
+        clust_to_cell_type_prob = {
+            cell_to_cluster[cell]: np.array(row)
+            for cell, (i, row) in zip(cells, results_df.iterrows())
+        }
+        cell_type_probs = np.array([
+            clust_to_cell_type_prob[clust]
+            for clust in all_clusts
+        ])
+
+        #cell_types_predicted = np.array([
+        #    x.encode('utf-8')
+        #    for x in ms_results_df['most_specific_cell_type']
+        #])
         cell_type_prob_columns = np.array([
             x.encode('utf-8')
             for x in results_df.columns
         ])
-        cell_type_probs = np.array(results_df, dtype=np.float32)
+        #cell_type_probs = np.array(results_df, dtype=np.float32)
         
         # This is a bit hacky, but we're going to pre-compute the text
         # that will be displayed upon each cell's hover-over event
@@ -140,46 +177,63 @@ def main():
                 for x in curr_pairs
             ])
             hover_texts.append(txt)
+
+        # Map each cluster to its hover text
+        clust_to_hover = {
+            cell_to_cluster[cell]: txt
+            for cell, txt in zip(cells, hover_texts)
+        }
         hover_texts = np.array([
-            x.encode('utf-8')
-            for x in hover_texts
+            clust_to_hover[clust].encode('utf-8')
+            for clust in all_clusts
         ])
+
+        #hover_texts = np.array([
+        #    x.encode('utf-8')
+        #    for x in hover_texts
+        #])
 
         with h5py.File(h5_f, 'r+') as f:
             try:
-                del f['per_tumor/{}/predicted_cell_type'.format(tumor)]
+                del f['per_tumor/{}/leiden_res_4/predicted_cell_type'.format(tumor)]
             except KeyError:
                 pass
             f.create_dataset(
-                'per_tumor/{}/predicted_cell_type'.format(tumor),
+                'per_tumor/{}/leiden_res_4/predicted_cell_type'.format(tumor), # TODO THIS CHANGED
                 data=cell_types_predicted,
                 compression="gzip"
             )
+            ###### REMOVE########
             try:
                 del f['per_tumor/{}/cell_type_probability'.format(tumor)]
             except KeyError:
                 pass
+            #####################
             f.create_dataset(
-                'per_tumor/{}/cell_type_probability'.format(tumor),
+                'per_tumor/{}/leiden_res_4/cell_type_probability'.format(tumor),
                 data=cell_type_probs,
                 compression="gzip"
             )
+            ####### REMOVE ########
             try:
                 del f['per_tumor/{}/cell_type_probability_columns'.format(tumor)]
             except KeyError:
                 pass
+            ######################
             f.create_dataset(
-                'per_tumor/{}/cell_type_probability_columns'.format(tumor),
+                'per_tumor/{}/leiden_res_4cell_type_probability_columns'.format(tumor),
                 data=cell_type_prob_columns,
                 compression="gzip"
             )
 
+            ####### REMOVE#########
             try:
                 del f['per_tumor/{}/cell_type_hover_texts'.format(tumor)]
             except KeyError:
                 pass
+            ######################
             f.create_dataset(
-                'per_tumor/{}/cell_type_hover_texts'.format(tumor),
+                'per_tumor/{}/leiden_res_4/cell_type_hover_texts'.format(tumor),
                 data=hover_texts,
                 compression="gzip"
             )

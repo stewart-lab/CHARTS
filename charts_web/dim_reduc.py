@@ -125,18 +125,23 @@ TUMOR_INFO_TEMPLATE = """
 """
 
 @app.callback(
-    Output(component_id='dim-reduc-scatter-1', component_property='figure'),
+    Output(component_id='dim-reduc-scatter-1', component_property='children'),
     [   
         Input(component_id='select-tumor-1', component_property='value'),
         Input(component_id='dim-reduc-alg-1', component_property='value'),
         Input(component_id='num-dims-1', component_property='value'),
         Input(component_id='color-by-feature-1', component_property='value'),
         Input(component_id='select-feature-category-1', component_property='value'),
-        Input(component_id='dot-size-1', component_property='value')
+        Input(component_id='dot-size-1', component_property='value'),
+        Input(component_id='alpha-1', component_property='value'),
+        Input(component_id='img-format-1', component_property='value'),
     ]
 )
-def update_dim_reduc_1(tumor, algo, num_dims, gene, category, dot_size):
-    return _build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size)
+def update_dim_reduc_1(tumor, algo, num_dims, gene, category, dot_size, alpha, img_format):
+    return dcc.Graph(
+        figure=_build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size, alpha),
+        config=_build_plot_config(img_format),
+    )
 
 
 @app.callback(
@@ -190,18 +195,24 @@ def _update_msg(tum, feat):
 
 
 @app.callback(
-    Output(component_id='dim-reduc-scatter-2', component_property='figure'),
+    Output(component_id='dim-reduc-scatter-2', component_property='children'),
     [
         Input(component_id='select-tumor-2', component_property='value'),
         Input(component_id='dim-reduc-alg-2', component_property='value'),
         Input(component_id='num-dims-2', component_property='value'),
         Input(component_id='color-by-feature-2', component_property='value'),
         Input(component_id='select-feature-category-2', component_property='value'),
-        Input(component_id='dot-size-2', component_property='value')
+        Input(component_id='dot-size-2', component_property='value'),
+        Input(component_id='alpha-2', component_property='value'),
+        Input(component_id='img-format-2', component_property='value')
     ]
 )
-def update_dim_reduc_2(tumor, algo, num_dims, gene, category, dot_size):
-    return _build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size)
+def update_dim_reduc_2(tumor, algo, num_dims, gene, category, dot_size, alpha, img_format):
+    return dcc.Graph(
+        figure=_build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size, alpha),
+        config=_build_plot_config(img_format),
+    )
+    #return _build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size, alpha)
 
 
 @app.callback(
@@ -323,7 +334,7 @@ def build_features_selector(idd, tumor, category):
         )
 
 
-def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size):
+def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size, alpha):
     if algo == 'umap':
         df_dim_reduc = load_data.load_tumor_umap(tumor_id, num_dims)
     elif algo == 'phate':
@@ -445,9 +456,10 @@ def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size):
         if num_dims == 3:
             markers=dict(
                 size=dot_size,
+                opacity=alpha,
                 color=df[col],
                 colorscale=palette,
-                opacity=0.0,
+                #opacity=0.0,
                 cmin=cmin,
                 cmax=cmax,
                 colorbar=dict(
@@ -471,9 +483,9 @@ def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size):
                 size=5
             markers=dict(
                 size=dot_size,
+                opacity=alpha,
                 color=df[col],
                 colorscale=palette,
-                opacity=1.0,
                 cmin=cmin,
                 cmax=cmax,
                 colorbar=dict(
@@ -549,7 +561,7 @@ def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size):
             markers=dict(
                 size=dot_size,
                 color=PALETTE[clust_i],
-                opacity=1.0
+                opacity=alpha
             )
             if category == 'tumor' or category == 'cell_type_classification':
                 group_name = group
@@ -686,15 +698,36 @@ def _build_control_panel(plot_num):
         ])
     ]
 
+
 @app.callback(Output("louad-out-1", "children"), [Input("loading-input-1", "value")])
 def input_triggers_spinner(value):
     time.sleep(1)
     return value
 
+
 @app.callback(Output("louad-out-2", "children"), [Input("loading-input-2", "value")])
 def input_triggers_spinner(value):
     time.sleep(1)
     return value
+
+#@app.callback(
+#    Output(component_id='dim-reduc-scatter-2', component_property='config'),
+#    [
+#        Input("img-format-2", "value")
+#    ]
+#)
+#def build_config_1(img_format):
+#    return _build_plot_config(img_format)
+
+def _build_plot_config(img_format):
+    return {
+        'displayModeBar': True,
+        'toImageButtonOptions': {
+            'format': img_format,
+            'filename': 'dash_plot'
+        },
+        "displaylogo": False
+    }
 
 def build_layout():
     layout = dcc.Tab(
@@ -740,17 +773,14 @@ def build_layout():
                                                 type="default",
                                                 color='black',
                                                 children=html.Div([
-                                                    dcc.Graph(
+                                                    html.Div(
                                                         id='dim-reduc-scatter-1',
-                                                        figure=_build_dim_reduc('PJ016', DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2),
-                                                        config={
-                                                            'displayModeBar': True,
-                                                            'toImageButtonOptions': {
-                                                                'format':'svg',
-                                                                'filename': 'dash_plot'
-                                                            },
-                                                            "displaylogo": False
-                                                        }
+                                                        children=[
+                                                            dcc.Graph(
+                                                                figure=_build_dim_reduc('PJ016', DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
+                                                                config=_build_plot_config('svg'),
+                                                            )
+                                                        ]
                                                     )
                                                 ], id='louad-out-1')
                                             ), 
@@ -766,6 +796,37 @@ def build_layout():
                                                         #step=None,
                                                         value=2,
                                                         id='dot-size-1'
+                                                    )
+                                                ])
+                                            ]),
+                                            dbc.Row([
+                                                dbc.Col([], width=100, style={"width": "15px"}),
+                                                dbc.Col([
+                                                    html.H6("Opacity: ")
+                                                ], width=100, style={"width": "40%"}),
+                                                dbc.Col([
+                                                    dcc.Slider(
+                                                        min=0.2,
+                                                        max=1,
+                                                        step=0.1,
+                                                        value=1.0,
+                                                        id='alpha-1'
+                                                    )
+                                                ])
+                                            ]),
+                                            dbc.Row([
+                                                dbc.Col([], width=100, style={"width": "15px"}),
+                                                dbc.Col([
+                                                    html.H6("Download format: ")
+                                                ], width=100, style={"width": "40%"}),
+                                                dbc.Col([
+                                                    dcc.Dropdown(
+                                                        options=[
+                                                            {'label': 'SVG', 'value': 'svg'},
+                                                            {'label': 'PNG', 'value': 'png'}
+                                                        ],
+                                                        value='svg',
+                                                        id='img-format-1'
                                                     )
                                                 ])
                                             ])
@@ -807,17 +868,14 @@ def build_layout():
                                                 type="default",
                                                 color='black',
                                                 children=html.Div([
-                                                    dcc.Graph(
+                                                    html.Div(
                                                         id='dim-reduc-scatter-2',
-                                                        figure=_build_dim_reduc('PJ016', DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2),
-                                                        config={
-                                                            'displayModeBar': True,
-                                                            'toImageButtonOptions': {
-                                                                'format':'svg',
-                                                                'filename': 'dash_plot'
-                                                            },
-                                                            "displaylogo": False
-                                                        }
+                                                        children=[
+                                                            dcc.Graph(
+                                                                figure=_build_dim_reduc('PJ016', DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
+                                                                config=_build_plot_config('svg'),
+                                                            )
+                                                        ]
                                                     )
                                                 ], id='louad-out-2')
                                             ),
@@ -833,6 +891,37 @@ def build_layout():
                                                         #step=None,
                                                         value=2,
                                                         id='dot-size-2'
+                                                    )
+                                                ])
+                                            ]),
+                                            dbc.Row([
+                                                dbc.Col([], width=100, style={"width": "15px"}),
+                                                dbc.Col([
+                                                    html.H6("Opacity: ")
+                                                ], width=100, style={"width": "40%"}),
+                                                dbc.Col([
+                                                    dcc.Slider(
+                                                        min=0.2,
+                                                        max=1,
+                                                        step=0.1,
+                                                        value=1.0,
+                                                        id='alpha-2'
+                                                    )
+                                                ])
+                                            ]),
+                                            dbc.Row([
+                                                dbc.Col([], width=100, style={"width": "15px"}),
+                                                dbc.Col([
+                                                    html.H6("Download format: ")
+                                                ], width=100, style={"width": "40%"}),
+                                                dbc.Col([
+                                                    dcc.Dropdown(
+                                                        options=[
+                                                            {'label': 'SVG', 'value': 'svg'},
+                                                            {'label': 'PNG', 'value': 'png'}
+                                                        ],
+                                                        value='svg',
+                                                        id='img-format-2'
                                                     )
                                                 ])
                                             ])

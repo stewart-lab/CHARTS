@@ -93,6 +93,29 @@ rule gsva_hallmark:
         shell(cmd)
 
 
+def _get_study_to_tumors():
+    import json
+    with open(config['tumor_parameters'], 'r') as f:
+        j = json.load(f)
+        return j['study_to_tumors']
+
+rule classify_malignant:
+    input:
+        '{}/{}'.format(config['db_loc'], 'charts.h5')
+    run:
+        cmds = [
+            'python classify_malignant.py -w -l {log}/log {{input}} {tumors} {study}'.format(
+                study=study, 
+                tumors=','.join(tumors),
+                log= config['log_dir']
+            )
+            for study, tumors in _get_study_to_tumors().items()
+        ]
+        for c in cmds:
+            shell('echo "{}"'.format(c))
+            shell(c)
+
+
 rule integration:
     input:
         '../../charts.h5'

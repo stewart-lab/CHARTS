@@ -26,7 +26,7 @@ def main():
     tumor_params_f = args[2]
 
     with open(tumor_params_f, 'r') as f:
-        tumor_params = json.load(f)
+        tumor_params = json.load(f)['per_tumor']
     
     overwrite = options.overwrite
 

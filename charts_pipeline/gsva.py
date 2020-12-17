@@ -29,6 +29,7 @@ def main():
     parser = OptionParser(usage=usage)
     parser.add_option("-o", "--out_dir", help="Directory to write output")
     parser.add_option("-w", "--overwrite", action='store_true', help="Overwrite data in the HDF5 file if there's a dataset already present")
+    parser.add_option("-r", "--resolution", help="Clustering to classify")
     (options, args) = parser.parse_args()
 
     h5_f = args[0]
@@ -40,6 +41,7 @@ def main():
     with h5py.File(h5_f, 'r') as f:
         the_tumors = f['per_tumor'].keys()
         the_tumors = sorted(the_tumors)
+    resolution = options.resolution
 
     print(the_tumors)
 
@@ -56,7 +58,7 @@ def main():
                 str(x)[2:-1]
                 for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
             ]
-            clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+            clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, int(resolution))][:]
             expression = f['per_tumor/{}/log1_tpm'.format(tumor)][:]
 
         all_clusts = sorted(set(clusters))
@@ -118,33 +120,21 @@ def main():
             with h5py.File(h5_f, 'r+') as f:
                 score_key = '{}_{}_gsva'.format(tumor, collection_name)
                 set_key = '{}_{}_gene_set_name'.format(tumor, collection_name)
-
-                ################## TODO REMOVE ###############################################
                 try:
-                    del f['per_tumor/{}/{}_gsva'.format(tumor, collection_name)]
+                    del f['per_tumor/{}/leiden_res_{}/{}_gsva'.format(tumor, int(resolution), collection_name)]
                 except KeyError:
                     pass
                 try:
-                    del f['per_tumor/{}/{}_gene_set_name'.format(tumor, collection_name)]
-                except KeyError:
-                    pass
-                ##############################################################################
-
-                try:
-                    del f['per_tumor/{}/leiden_res_4/{}_gsva'.format(tumor, collection_name)]
-                except KeyError:
-                    pass
-                try:
-                    del f['per_tumor/{}/leiden_res_4/{}_gene_set_name'.format(tumor, collection_name)]
+                    del f['per_tumor/{}/leiden_res_{}/{}_gene_set_name'.format(tumor, int(resolution), collection_name)]
                 except KeyError:
                     pass
 
-                f['per_tumor/{}/leiden_res_4'.format(tumor)].create_dataset(
+                f['per_tumor/{}/leiden_res_{}'.format(tumor, int(resolution))].create_dataset(
                     '{}_gsva'.format(collection_name),
                     data=clust_scores,
                     compression='gzip'
                 )
-                f['per_tumor/{}/leiden_res_4'.format(tumor)].create_dataset(
+                f['per_tumor/{}/leiden_res_{}'.format(tumor, int(resolution))].create_dataset(
                     '{}_gene_set_name'.format(collection_name),
                     data=np.array([
                         x.encode('utf-8')

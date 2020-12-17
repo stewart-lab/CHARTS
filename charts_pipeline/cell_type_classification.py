@@ -19,6 +19,7 @@ def main():
     usage = "" # TODO
     parser = OptionParser(usage=usage)
     parser.add_option("-w", "--overwrite", action="store_true", help="Overwrite data in database")
+    parser.add_option("-r", "--resolution", help="Clustering to classify")
     (options, args) = parser.parse_args()
 
     h5_f = args[0]
@@ -28,6 +29,7 @@ def main():
     with open(tumor_params_f, 'r') as f:
         tumor_params = json.load(f)['per_tumor']
     
+    resolution = options.resolution
     overwrite = options.overwrite
 
     sc.settings.verbosity = 3
@@ -65,7 +67,7 @@ def main():
                     for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
                 ]
             expression = f['per_tumor/{}/log1_tpm'.format(tumor)][:]
-            clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+            clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, resolution)][:]
 
         all_clusts = sorted(set(clusters))
 
@@ -188,52 +190,40 @@ def main():
             for clust in all_clusts
         ])
 
-        #hover_texts = np.array([
-        #    x.encode('utf-8')
-        #    for x in hover_texts
-        #])
-
         with h5py.File(h5_f, 'r+') as f:
             try:
-                del f['per_tumor/{}/leiden_res_4/predicted_cell_type'.format(tumor)]
+                del f['per_tumor/{}/leiden_res_{}/predicted_cell_type'.format(tumor, int(resolution))]
             except KeyError:
                 pass
             f.create_dataset(
-                'per_tumor/{}/leiden_res_4/predicted_cell_type'.format(tumor), # TODO THIS CHANGED
+                'per_tumor/{}/leiden_res_{}/predicted_cell_type'.format(tumor, int(resolution)),
                 data=cell_types_predicted,
                 compression="gzip"
             )
-            ###### REMOVE########
             try:
-                del f['per_tumor/{}/cell_type_probability'.format(tumor)]
+                del f['per_tumor/{}/leiden_res_{}/cell_type_probability'.format(tumor, int(resolution))]
             except KeyError:
                 pass
-            #####################
             f.create_dataset(
-                'per_tumor/{}/leiden_res_4/cell_type_probability'.format(tumor),
+                'per_tumor/{}/leiden_res_{}/cell_type_probability'.format(tumor, int(resolution)),
                 data=cell_type_probs,
                 compression="gzip"
             )
-            ####### REMOVE ########
             try:
-                del f['per_tumor/{}/cell_type_probability_columns'.format(tumor)]
+                del f['per_tumor/{}/leiden_res_{}/cell_type_probability_columns'.format(tumor, int(resolution))]
             except KeyError:
                 pass
-            ######################
             f.create_dataset(
-                'per_tumor/{}/leiden_res_4cell_type_probability_columns'.format(tumor),
+                'per_tumor/{}/leiden_res_{}/cell_type_probability_columns'.format(tumor, int(resolution)),
                 data=cell_type_prob_columns,
                 compression="gzip"
             )
-
-            ####### REMOVE#########
             try:
-                del f['per_tumor/{}/cell_type_hover_texts'.format(tumor)]
+                del f['per_tumor/{}/leiden_res_{}/cell_type_hover_texts'.format(tumor, int(resolution))]
             except KeyError:
                 pass
-            ######################
             f.create_dataset(
-                'per_tumor/{}/leiden_res_4/cell_type_hover_texts'.format(tumor),
+                'per_tumor/{}/leiden_res_{}/cell_type_hover_texts'.format(tumor, int(resolution)),
                 data=hover_texts,
                 compression="gzip"
             )

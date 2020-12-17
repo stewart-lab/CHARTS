@@ -40,13 +40,13 @@ def load_tumor_gene_names(tumor):
             for x in f['{}_gene_name'.format(tumor)][:]
         ])
 
-def hover_texts(tumor, cells):
+def hover_texts(tumor, res, cells):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
             for x in f['per_tumor/{}/cell'.format(tumor)][:]
         ]
-        clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+        clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
         # Map each cell to its cluster
         cell_to_clust = {
             cell: clust
@@ -55,7 +55,7 @@ def hover_texts(tumor, cells):
         # Get each cluster's cell type 
         texts_per_clust = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/cell_type_hover_texts'.format(tumor)]
+            for x in f['per_tumor/{}/leiden_res_{}/cell_type_hover_texts'.format(tumor, res)]
         ]
         # Map each cell to its cell type
         texts = [
@@ -69,13 +69,13 @@ def hover_texts(tumor, cells):
     df = df.loc[cells]
     return list(df['hover_texts'])     
 
-def cell_type_probability_columns(tumor, min_prob=None):
+def cell_type_probability_columns(tumor, res, min_prob=None):
     with h5py.File(DB_LOC, 'r') as f:
         cols = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/cell_type_probability_columns'.format(tumor)]
+            for x in f['per_tumor/{}/leiden_res_{}/cell_type_probability_columns'.format(tumor, res)]
         ]
-        probs = f['per_tumor/{}/leiden_res_4/cell_type_probability'.format(tumor)][:]
+        probs = f['per_tumor/{}/leiden_res_{}/cell_type_probability'.format(tumor, res)][:]
         mins = np.min(probs, axis=0) 
         df = pd.DataFrame(
             data={'probability': mins},
@@ -83,31 +83,31 @@ def cell_type_probability_columns(tumor, min_prob=None):
         )
         return set(df.loc[df['probability'] > min_prob].index)
 
-def hallmark_gene_sets(tumor):
+def hallmark_gene_sets(tumor, res):
     with h5py.File(DB_LOC, 'r') as f:
         cols = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/hallmark_gene_set_name'.format(tumor)]
+            for x in f['per_tumor/{}/leiden_res_{}/hallmark_gene_set_name'.format(tumor, res)]
         ]
     return sorted(set(cols))
 
 
-def cancersea_gene_sets(tumor):
+def cancersea_gene_sets(tumor, res):
     with h5py.File(DB_LOC, 'r') as f:
         cols = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/cancersea_gene_set_name'.format(tumor)]
+            for x in f['per_tumor/{}/leiden_res_{}/cancersea_gene_set_name'.format(tumor, res)]
         ]
     return sorted(set(cols))
 
 
-def load_tumor_cell_type_classifications(tumor):
+def load_tumor_cell_type_classifications(tumor, res):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
             for x in f['per_tumor/{}/cell'.format(tumor)][:]
         ]
-        clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+        clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
         # Map each cell to its cluster
         cell_to_clust = {
             cell: clust
@@ -116,7 +116,7 @@ def load_tumor_cell_type_classifications(tumor):
         # Get each cluster's cell type 
         cell_types_per_clust = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/predicted_cell_type'.format(tumor)]
+            for x in f['per_tumor/{}/leiden_res_{}/predicted_cell_type'.format(tumor, res)]
         ]
         print(cell_types_per_clust)
         # Map each cell to its cell type
@@ -133,20 +133,20 @@ def load_tumor_cell_type_classifications(tumor):
     df = df.set_index('cell')
     return df
 
-def load_tumor_clusters(tumor):
+def load_tumor_clusters(tumor, res):
     with h5py.File(DB_LOC, 'r') as f:
         return set([
             str(x)
-            for x in f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+            for x in f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
         ])
 
-def load_tumor_clusters_for_cells(tumor):
+def load_tumor_clusters_for_cells(tumor, res):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
             for x in f['per_tumor/{}/cell'.format(tumor)][:]
         ]
-        clusts = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+        clusts = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
     df = pd.DataFrame(
         data={
             'cell': cells,
@@ -155,6 +155,7 @@ def load_tumor_clusters_for_cells(tumor):
     )
     df = df.set_index('cell')
     return df
+
 
 def load_tumor_gene(tumor, gene):
     with h5py.File(DB_LOC, 'r') as f:
@@ -182,7 +183,34 @@ def load_tumor_gene(tumor, gene):
     return df
 
 
-def load_tumor_cell_type_probabilities(tumor, cell_type):
+def load_tumor_gene_w_cluster(tumor, res, gene):
+    with h5py.File(DB_LOC, 'r') as f:
+        cells = [
+            str(x)[2:-1]
+            for x in f['per_tumor/{}/cell'.format(tumor)][:]
+        ]
+        clusts = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
+        gene_names = [
+            str(x)[2:-1]
+            for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
+        ]
+        gene_name_to_index = {
+            gene_name: index
+            for index, gene_name in enumerate(gene_names)
+        }
+        if gene in gene_name_to_index:
+            index = gene_name_to_index[gene]
+            expressions = np.array(f['per_tumor/{}/log1_tpm'.format(tumor)][:,index])
+        else:
+            expressions = np.zeros(len(cells))
+    df = pd.DataFrame(
+        data={'Expression log(TPM+1)': expressions, 'Cluster': clusts},
+        index=cells
+    )
+    return df
+
+
+def load_tumor_cell_type_probabilities(tumor, res, cell_type):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
@@ -192,17 +220,17 @@ def load_tumor_cell_type_probabilities(tumor, cell_type):
         # Retrieve cell type probabilities for each cluster
         cell_types = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/cell_type_probability_columns'.format(tumor)][:]
+            for x in f['per_tumor/{}/leiden_res_{}/cell_type_probability_columns'.format(tumor, res)][:]
         ]
         cell_type_to_index = {
             cell_type: index
             for index, cell_type in enumerate(cell_types)
         }
         index = cell_type_to_index[cell_type]
-        probs_per_clust = np.array(f['per_tumor/{}/leiden_res_4/cell_type_probability'.format(tumor)][:,index])
+        probs_per_clust = np.array(f['per_tumor/{}/leiden_res_{}/cell_type_probability'.format(tumor, res)][:,index])
       
         # Map cluster probabilities to each cell
-        clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+        clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
         cell_to_clust = {
             cell: clust
             for cell, clust in zip(cells, clusters)
@@ -219,13 +247,13 @@ def load_tumor_cell_type_probabilities(tumor, cell_type):
     return df
 
 
-def load_tumor_hallmark_enrichment(tumor, gene_set):
+def load_tumor_hallmark_enrichment(tumor, res, gene_set):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
             for x in f['per_tumor/{}/cell'.format(tumor)][:]
         ]
-        clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+        clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
 
         # Map each cell to its cluster
         cell_to_clust = {
@@ -236,7 +264,7 @@ def load_tumor_hallmark_enrichment(tumor, gene_set):
         # Get gene set enrichment scores
         gene_sets = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/hallmark_gene_set_name'.format(tumor)][:]
+            for x in f['per_tumor/{}/leiden_res_{}/hallmark_gene_set_name'.format(tumor, res)][:]
         ]
         gene_set_to_index = {
             gene_set: index
@@ -246,7 +274,7 @@ def load_tumor_hallmark_enrichment(tumor, gene_set):
 
 
         # Map scores to clusters
-        clust_scores = np.array(f['per_tumor/{}/leiden_res_4/hallmark_gsva'.format(tumor)][:,index])
+        clust_scores = np.array(f['per_tumor/{}/leiden_res_{}/hallmark_gsva'.format(tumor, res)][:,index])
         scores = np.array([
             clust_scores[cell_to_clust[cell]]
             for cell in cells
@@ -259,13 +287,13 @@ def load_tumor_hallmark_enrichment(tumor, gene_set):
     return df
 
 
-def load_tumor_cancersea_enrichment(tumor, gene_set):
+def load_tumor_cancersea_enrichment(tumor, res, gene_set):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
             for x in f['per_tumor/{}/cell'.format(tumor)][:]
         ]
-        clusters = f['per_tumor/{}/leiden_res_4/cluster'.format(tumor)][:]
+        clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
 
         # Map each cell to its cluster
         cell_to_clust = {
@@ -276,7 +304,7 @@ def load_tumor_cancersea_enrichment(tumor, gene_set):
         # Get gene set enrichment scores
         gene_sets = [
             str(x)[2:-1]
-            for x in f['per_tumor/{}/leiden_res_4/cancersea_gene_set_name'.format(tumor)][:]
+            for x in f['per_tumor/{}/leiden_res_{}/cancersea_gene_set_name'.format(tumor, res)][:]
         ]
         gene_set_to_index = {
             gene_set: index
@@ -286,7 +314,7 @@ def load_tumor_cancersea_enrichment(tumor, gene_set):
 
         
         # Map scores to clusters
-        clust_scores = np.array(f['per_tumor/{}/leiden_res_4/cancersea_gsva'.format(tumor)][:,index])
+        clust_scores = np.array(f['per_tumor/{}/leiden_res_{}/cancersea_gsva'.format(tumor, res)][:,index])
         scores = np.array([
             clust_scores[cell_to_clust[cell]]
             for cell in cells

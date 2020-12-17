@@ -21,6 +21,7 @@ DEFAULT_ALGO = 'umap'
 DEFAULT_GENE = 'SOX10'
 DEFAULT_TUMOR_1 = "PJ025"
 DEFAULT_TUMOR_2 = "PJ035"
+DEFAULT_RES = '2'
 
 # Color blind palette from:
 # https://jacksonlab.agronomy.wisc.edu/2016/05/23/15-level-colorblind-friendly-palette/
@@ -60,14 +61,15 @@ TUMOR_INFO_TEMPLATE = """
         Output(component_id='select-cluster-dist-1', component_property='value')
     ],
     [
-        Input(component_id='select-tumor-dist-1', component_property='value')
+        Input(component_id='select-tumor-dist-1', component_property='value'),
+        Input(component_id='select-cluster-res-dist-1', component_property='value')
     ]
 )
-def update_select_cluster_de_1(tumor):
+def update_select_cluster_de_1(tumor, res):
     return (
         [{'label': 'All', 'value': 'all'}] + [
             {'label': 'Cluster {}'.format(clust), 'value': clust}
-            for clust in sorted([int(x) for x in set(load_data.load_tumor_clusters(tumor))])
+            for clust in sorted([int(x) for x in set(load_data.load_tumor_clusters(tumor, res))])
         ],
         'all'
     )
@@ -78,14 +80,15 @@ def update_select_cluster_de_1(tumor):
         Output(component_id='select-cluster-dist-2', component_property='value')
     ],
     [
-        Input(component_id='select-tumor-dist-2', component_property='value')
+        Input(component_id='select-tumor-dist-2', component_property='value'),
+        Input(component_id='select-cluster-res-dist-2', component_property='value')
     ]
 )
-def update_select_cluster_de_2(tumor):
+def update_select_cluster_de_2(tumor, res):
     return (
         [{'label': 'All', 'value': 'all'}] + [
             {'label': 'Cluster {}'.format(clust), 'value': clust}
-            for clust in sorted([int(x) for x in set(load_data.load_tumor_clusters(tumor))])
+            for clust in sorted([int(x) for x in set(load_data.load_tumor_clusters(tumor, res))])
         ],
         'all'
     )
@@ -96,14 +99,15 @@ def update_select_cluster_de_2(tumor):
     Output(component_id='dist-plot-1', component_property='children'),
     [   
         Input(component_id='select-tumor-dist-1', component_property='value'),
+        Input(component_id='select-cluster-res-dist-1', component_property='value'),
         Input(component_id='select-cluster-dist-1', component_property='value'),
         Input(component_id='color-by-feature-dist-1', component_property='value'),
         Input(component_id='img-format-dist-1', component_property='value'),
     ]
 )
-def update_dim_reduc_1(tumor_id, clust, gene, img_format):
+def update_dim_reduc_1(tumor_id, res, clust, gene, img_format):
     return dcc.Graph(
-        figure=_build_dist_plot(tumor_id, gene, clust),
+        figure=_build_dist_plot(tumor_id, res, gene, clust),
         config=_build_plot_config(img_format),
     )
 
@@ -150,21 +154,22 @@ def _update_msg(tum):
     Output(component_id='dist-plot-2', component_property='children'),
     [
         Input(component_id='select-tumor-dist-2', component_property='value'),
+        Input(component_id='select-cluster-res-dist-2', component_property='value'),
         Input(component_id='select-cluster-dist-2', component_property='value'),
         Input(component_id='color-by-feature-dist-2', component_property='value'),
         Input(component_id='img-format-dist-2', component_property='value')
     ]
 )
-def update_dim_reduc_2(tumor_id, clust, gene, img_format):
+def update_dim_reduc_2(tumor_id, res, clust, gene, img_format):
     return dcc.Graph(
-        figure=_build_dist_plot(tumor_id, gene, clust),
+        figure=_build_dist_plot(tumor_id, res, gene, clust),
         config=_build_plot_config(img_format),
     )
 
 
 
-def _build_dist_plot(tumor_id, gene, clust):
-    df = load_data.load_tumor_gene_w_cluster(tumor_id, gene)
+def _build_dist_plot(tumor_id, res, gene, clust):
+    df = load_data.load_tumor_gene_w_cluster(tumor_id, res, gene)
     if clust == 'all':
         fig = px.box(df, y="Expression log(TPM+1)", x="Cluster")
     else:
@@ -196,13 +201,23 @@ def _build_control_panel(plot_num):
                 html.Div([
                     dbc.Row(children=[
                         dbc.Col([
+                            html.H6("Select cluster resolution:")
+                        ], width=100, style={"width": "40%"}),
+                        dbc.Col([
+                            common.build_cluster_res_dropdown('select-cluster-res-dist-{}'.format(plot_num))
+                        ])
+                    ])
+                ]),
+                html.Div([
+                    dbc.Row(children=[
+                        dbc.Col([
                             html.H6("Select a cluster:")
                         ], width=100, style={"width": "40%"}),
                         dbc.Col([
                             dcc.Dropdown(
                                 options=[{'label': 'All', 'value': 'all'}] + [
                                     {'label': 'Cluster {}'.format(clust), 'value': clust}
-                                    for clust in sorted([int(x) for x in set(load_data.load_tumor_clusters(DEFAULT_TUMOR_1))])
+                                    for clust in sorted([int(x) for x in set(load_data.load_tumor_clusters(DEFAULT_TUMOR_1, DEFAULT_RES))])
                                 ],
                                 #style={"width": '60%'},
                                 id='select-cluster-dist-{}'.format(plot_num),
@@ -298,7 +313,7 @@ def build_layout():
                                                         id='dist-plot-1',
                                                         children=[
                                                             dcc.Graph(
-                                                                figure=_build_dist_plot('PJ016', DEFAULT_GENE, 'all'),
+                                                                figure=_build_dist_plot('PJ016', DEFAULT_RES, DEFAULT_GENE, 'all'),
                                                                 config=_build_plot_config('svg'),
                                                             )
                                                         ]
@@ -363,7 +378,7 @@ def build_layout():
                                                         id='dist-plot-2',
                                                         children=[
                                                             dcc.Graph(
-                                                                figure=_build_dist_plot('PJ016', DEFAULT_GENE, 'all'),
+                                                                figure=_build_dist_plot('PJ016', DEFAULT_RES, DEFAULT_GENE, 'all'),
                                                                 config=_build_plot_config('svg'),
                                                             )
                                                         ]

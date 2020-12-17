@@ -128,6 +128,7 @@ TUMOR_INFO_TEMPLATE = """
     Output(component_id='dim-reduc-scatter-1', component_property='children'),
     [   
         Input(component_id='select-tumor-1', component_property='value'),
+        Input(component_id='select-cluster-res-1', component_property='value'),
         Input(component_id='dim-reduc-alg-1', component_property='value'),
         Input(component_id='num-dims-1', component_property='value'),
         Input(component_id='color-by-feature-1', component_property='value'),
@@ -137,9 +138,9 @@ TUMOR_INFO_TEMPLATE = """
         Input(component_id='img-format-1', component_property='value'),
     ]
 )
-def update_dim_reduc_1(tumor, algo, num_dims, gene, category, dot_size, alpha, img_format):
+def update_dim_reduc_1(tumor, res, algo, num_dims, gene, category, dot_size, alpha, img_format):
     return dcc.Graph(
-        figure=_build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size, alpha),
+        figure=_build_dim_reduc(tumor, res, algo, num_dims, gene, category, dot_size, alpha),
         config=_build_plot_config(img_format),
     )
 
@@ -148,11 +149,12 @@ def update_dim_reduc_1(tumor, algo, num_dims, gene, category, dot_size, alpha, i
     Output(component_id='color-by-feature-container-1', component_property='children'),
     [
         Input(component_id='select-tumor-1', component_property='value'),
+        Input(component_id='select-cluster-res-1', component_property='value'),
         Input(component_id='select-feature-category-1', component_property='value')
     ]
 )
-def update_feature_category_selector_1(tumor, category):
-    return build_features_selector('color-by-feature-1', tumor, category)
+def update_feature_category_selector_1(tumor, res, category):
+    return build_features_selector('color-by-feature-1', tumor, res, category)
 
 @app.callback(
     Output(component_id='msg-box-1', component_property='srcDoc'),
@@ -198,6 +200,7 @@ def _update_msg(tum, feat):
     Output(component_id='dim-reduc-scatter-2', component_property='children'),
     [
         Input(component_id='select-tumor-2', component_property='value'),
+        Input(component_id='select-cluster-res-2', component_property='value'),
         Input(component_id='dim-reduc-alg-2', component_property='value'),
         Input(component_id='num-dims-2', component_property='value'),
         Input(component_id='color-by-feature-2', component_property='value'),
@@ -207,23 +210,23 @@ def _update_msg(tum, feat):
         Input(component_id='img-format-2', component_property='value')
     ]
 )
-def update_dim_reduc_2(tumor, algo, num_dims, gene, category, dot_size, alpha, img_format):
+def update_dim_reduc_2(tumor, res, algo, num_dims, gene, category, dot_size, alpha, img_format):
     return dcc.Graph(
-        figure=_build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size, alpha),
+        figure=_build_dim_reduc(tumor, res, algo, num_dims, gene, category, dot_size, alpha),
         config=_build_plot_config(img_format),
     )
-    #return _build_dim_reduc(tumor, algo, num_dims, gene, category, dot_size, alpha)
 
 
 @app.callback(
     Output(component_id='color-by-feature-container-2', component_property='children'),
     [
         Input(component_id='select-tumor-2', component_property='value'),
+        Input(component_id='select-cluster-res-2', component_property='value'),
         Input(component_id='select-feature-category-2', component_property='value')
     ]
 )
-def update_feature_category_selector_2(tumor, category):
-    return build_features_selector('color-by-feature-2', tumor, category)
+def update_feature_category_selector_2(tumor, res, category):
+    return build_features_selector('color-by-feature-2', tumor, res, category)
 
 
 def build_dim_reduc_selector(idd):
@@ -263,7 +266,7 @@ def build_feature_category_selector(idd):
     )
 
 
-def build_features_selector(idd, tumor, category):
+def build_features_selector(idd, tumor, res, category):
     if category == 'gene':
         return dcc.Input(id=idd, value=DEFAULT_GENE)
     elif category == 'cluster':
@@ -273,19 +276,11 @@ def build_features_selector(idd, tumor, category):
             id=idd
         )
     elif category == 'cell_type_probability':
-        if '&' in tumor:
-            tum_1 = tumor.split('&')[0]
-            tum_2 = tumor.split('&')[1]
-            return common.build_cell_type_probability_dropdown_mult_tumors(
-                tum_1,
-                tum_2,
-                idd     
-            )
-        else:
-            return common.build_cell_type_probability_dropdown(
-                tumor, 
-                idd        
-            )
+        return common.build_cell_type_probability_dropdown(
+            tumor, 
+            res,
+            idd        
+        )
     elif category == 'tumor':
         return dcc.Dropdown(
             options=[{'label': 'Tumor', 'value': 'Tumor'}],
@@ -299,33 +294,17 @@ def build_features_selector(idd, tumor, category):
             id=idd
         )
     elif category == 'hallmark_enrichment':
-        if '&' in tumor:
-            tum_1 = tumor.split('&')[0]
-            tum_2 = tumor.split('&')[1]
-            return common.build_hallmark_enrichment_dropdown_mult_tumors(
-                tum_1,
-                tum_2,
-                idd
-            )
-        else:
-            return common.build_hallmark_enrichment_dropdown(
-                tumor,
-                idd
-            )
+        return common.build_hallmark_enrichment_dropdown(
+            tumor,
+            res,
+            idd
+        )
     elif category == 'cancersea_enrichment':
-        if '&' in tumor:
-            tum_1 = tumor.split('&')[0]
-            tum_2 = tumor.split('&')[1]
-            return common.build_cancersea_enrichment_dropdown_mult_tumors(
-                tum_1,
-                tum_2,
-                idd
-            )
-        else:
-            return common.build_cancersea_enrichment_dropdown(
-                tumor,
-                idd
-            )
+        return common.build_cancersea_enrichment_dropdown(
+            tumor,
+            res,
+            idd
+        )
     elif category == 'malignancy_score':
         return dcc.Dropdown(
             options=[{'label': 'Malignancy Score', 'value': 'Malignancy Score'}],
@@ -334,92 +313,38 @@ def build_features_selector(idd, tumor, category):
         )
 
 
-def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size, alpha):
+def _build_dim_reduc(tumor_id, res, algo, num_dims, feat, category, dot_size, alpha):
     if algo == 'umap':
         df_dim_reduc = load_data.load_tumor_umap(tumor_id, num_dims)
     elif algo == 'phate':
         df_dim_reduc = load_data.load_tumor_phate(tumor_id, num_dims)
 
-    if '&' in tumor_id:
-        tums = tumor_id.split('&')
-        tum_1 = tums[0]
-        tum_2 = tums[1]
-        hover_texts = load_data.load_hover_texts_mult_tumors( 
-            tum_1,
-            tum_2,
-            df_dim_reduc.index
-        )
-    else:
-        hover_texts = load_data.hover_texts(tumor_id, df_dim_reduc.index)
+    # Load hover texts on each cell
+    hover_texts = load_data.hover_texts(tumor_id, res, df_dim_reduc.index)
 
     if category in set(['gene', 'cell_type_probability', 'hallmark_enrichment', 'cancersea_enrichment', 'malignancy_score']):
-        # Check if this is an aligned set of tumors
-        if '&' in tumor_id:
-            tums = tumor_id.split('&')
-            tum_1 = tums[0]
-            tum_2 = tums[1]
-            if category == 'gene':
-                df_color = load_data.load_color_by_real_value_mult_tumors(
-                    tum_1,
-                    tum_2,
-                    df_dim_reduc.index,
-                    'log1_tpm',
-                    'gene_name',
-                    feat
-                )
-            elif category == 'cell_type_probability':
-                df_color = load_data.load_color_by_real_value_mult_tumors(
-                    tum_1,
-                    tum_2,
-                    df_dim_reduc.index,
-                    'cell_type_probability',
-                    'cell_type_probability_columns',
-                    feat
-                )
-            elif category == 'hallmark_enrichment':
-                df_color = load_data.load_color_by_real_value_mult_tumors(
-                    tum_1,
-                    tum_2,
-                    df_dim_reduc.index,
-                    'hallmark_gsva',
-                    'hallmark_gene_set_name',
-                    feat
-                )
-            elif category == 'cancersea_enrichment':
-                df_color = load_data.load_color_by_real_value_mult_tumors(
-                    tum_1,
-                    tum_2,
-                    df_dim_reduc.index,
-                    'cancersea_gsva',
-                    'cancersea_gene_set_name',
-                    feat
-                )
-            elif category == 'malignancy_score':
-                df_color = load_data.load_malignancy_score_mult_tumors(
-                    tum_1,
-                    tum_2,
-                    df_dim_reduc.index
-                )
-        else:
-            if category == 'gene':
-                df_color = load_data.load_tumor_gene(tumor_id, feat)
-            elif category == 'cell_type_probability':
-                df_color = load_data.load_tumor_cell_type_probabilities(
-                    tumor_id, 
-                    feat
-                )
-            elif category == 'hallmark_enrichment':
-                df_color = load_data.load_tumor_hallmark_enrichment(
-                    tumor_id, 
-                    feat
-                )
-            elif category == 'cancersea_enrichment':
-                df_color = load_data.load_tumor_cancersea_enrichment(
-                    tumor_id,
-                    feat
-                )
-            elif category == 'malignancy_score':
-                df_color = load_data.load_malignancy_score(tumor_id)
+        if category == 'gene':
+            df_color = load_data.load_tumor_gene(tumor_id, feat)
+        elif category == 'cell_type_probability':
+            df_color = load_data.load_tumor_cell_type_probabilities(
+                tumor_id, 
+                res,
+                feat
+            )
+        elif category == 'hallmark_enrichment':
+            df_color = load_data.load_tumor_hallmark_enrichment(
+                tumor_id, 
+                res,
+                feat
+            )
+        elif category == 'cancersea_enrichment':
+            df_color = load_data.load_tumor_cancersea_enrichment(
+                tumor_id,
+                res,
+                feat
+            )
+        elif category == 'malignancy_score':
+            df_color = load_data.load_malignancy_score(tumor_id)
 
         col = 'color_by'
 
@@ -444,7 +369,6 @@ def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size, alpha):
 
         # Determine color map
         if category == 'hallmark_enrichment' or category == 'cancersea_enrichment':
-            #palette = 'RdBu'
             palette = 'RdYlBu_r'
         else:
             palette = 'Viridis'
@@ -503,46 +427,9 @@ def _build_dim_reduc(tumor_id, algo, num_dims, feat, category, dot_size, alpha):
             )])
     elif category == 'cluster' or category == 'tumor' or category == 'cell_type_classification':
         if category == 'cluster':
-            if '&' in tumor_id:
-                tums = tumor_id.split('&')
-                tum_1 = tums[0]
-                tum_2 = tums[1]
-                df_color = load_data.load_clusters_mult_tumors(
-                    tum_1,
-                    tum_2,
-                    df_dim_reduc.index
-                )
-            else:
-                df_color = load_data.load_tumor_clusters_for_cells(tumor_id)
-        elif category == 'tumor':
-            if '&' in tumor_id:
-                tums = tumor_id.split('&')
-                tum_1 = tums[0]
-                tum_2 = tums[1]
-                df_color = load_data.load_tumors_for_cells_mult_tumors(
-                    tum_1, 
-                    tum_2, 
-                    df_dim_reduc.index
-                )
-            else:
-                df_color = pd.DataFrame(
-                    data={
-                        'color_by': [tumor_id for x in df_dim_reduc.index]
-                    },
-                    index=df_dim_reduc.index
-                )
+            df_color = load_data.load_tumor_clusters_for_cells(tumor_id, res)
         elif category == 'cell_type_classification':
-            if '&' in tumor_id:
-                tums = tumor_id.split('&')
-                tum_1 = tums[0]
-                tum_2 = tums[1]
-                df_color = load_data.load_cell_type_classifications_mult_tumors(
-                    tum_1,
-                    tum_2, 
-                    df_dim_reduc.index
-                )
-            else:
-                df_color = load_data.load_tumor_cell_type_classifications(tumor_id)
+            df_color = load_data.load_tumor_cell_type_classifications(tumor_id, res)
 
         col = 'color_by'
         df = df_dim_reduc.join(df_color)
@@ -655,6 +542,16 @@ def _build_control_panel(plot_num):
                 html.Div([
                     dbc.Row(children=[
                         dbc.Col([
+                            html.H6("Select cluster resolution:")
+                        ], width=100, style={"width": "40%"}),
+                        dbc.Col([
+                            common.build_cluster_res_dropdown('select-cluster-res-{}'.format(plot_num))
+                        ])
+                    ])
+                ]),
+                html.Div([
+                    dbc.Row(children=[
+                        dbc.Col([
                             html.H6("Select algorithm:")
                         ], width=100, style={"width": "40%"}),
                         dbc.Col([
@@ -689,7 +586,7 @@ def _build_control_panel(plot_num):
                         ], width=100, style={"width": "40%"}),
                         dbc.Col([
                             html.Div([
-                                build_features_selector('color-by-feature-{}'.format(plot_num), 'PJ016', 'gene')
+                                build_features_selector('color-by-feature-{}'.format(plot_num), 'PJ016', '2', 'gene')
                             ], id='color-by-feature-container-{}'.format(plot_num))
                         ])
                     ])
@@ -777,7 +674,7 @@ def build_layout():
                                                         id='dim-reduc-scatter-1',
                                                         children=[
                                                             dcc.Graph(
-                                                                figure=_build_dim_reduc('PJ016', DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
+                                                                figure=_build_dim_reduc('PJ016', 2, DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
                                                                 config=_build_plot_config('svg'),
                                                             )
                                                         ]
@@ -872,7 +769,7 @@ def build_layout():
                                                         id='dim-reduc-scatter-2',
                                                         children=[
                                                             dcc.Graph(
-                                                                figure=_build_dim_reduc('PJ016', DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
+                                                                figure=_build_dim_reduc('PJ016', 2, DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
                                                                 config=_build_plot_config('svg'),
                                                             )
                                                         ]

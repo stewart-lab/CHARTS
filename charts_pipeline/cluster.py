@@ -1,9 +1,3 @@
-import matplotlib as mpl
-#mpl.use('Agg')
-import seaborn as sns
-from matplotlib import pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 import scanpy as sc
@@ -12,16 +6,11 @@ import os
 from os.path import join
 import subprocess
 from anndata import AnnData
-import phate
 from optparse import OptionParser
 from collections import defaultdict
-import gseapy as gp
 import h5py
 
 sys.path.append('..')
-
-GENE_SETS = ['GO_Biological_Process_2018']
-#GENE_SETS = ['GO_Molecular_Function_2018']
 
 def main():
     usage = "" # TODO
@@ -67,42 +56,48 @@ def main():
 
         print('Shape of matrix: ', expression.shape)
 
-        if expression.shape[0] > 10:
-            ad = AnnData(
-                X=expression, 
-                obs=pd.DataFrame(data=cells, columns=['cell'], index=cells)
-            )
-            sc.pp.pca(ad, n_comps=50)
-            sc.pp.neighbors(ad)
-            sc.tl.leiden(ad, resolution=resolution)
+        #if expression.shape[0] > 10:
+        ad = AnnData(
+            X=expression, 
+            obs=pd.DataFrame(data=cells, columns=['cell'], index=cells)
+        )
+        sc.pp.pca(ad, n_comps=min([50, expression.shape[0]-1]))
+        sc.pp.neighbors(ad)
 
-            clusters = ad.obs['leiden']
-            assert tuple(ad.obs.index) == tuple(cells)
-            
-            with h5py.File(h5_f, 'r+') as f:
-                try:
-                    del f['per_tumor/{}/cluster'.format(tumor)]
-                except KeyError:
-                    pass
-                f.create_dataset(
-                    'per_tumor/{}/cluster'.format(tumor), 
-                    data=np.array(clusters, dtype=np.int32), 
-                    compression="gzip"
-                )
+        if expression.shape[0] < 50:
+            print("Number of cells is only {}. Overriding resolution to be 1.0".format(expression.shape[0]))
+            use_resolution = 1.0
         else:
-            with h5py.File(h5_f, 'r+') as f:
-                try:
-                    del f['per_tumor/{}/cluster'.format(tumor)]
-                except KeyError:
-                    pass
-                f.create_dataset(
-                    'per_tumor/{}/cluster'.format(tumor),
-                    data=np.array(
-                        [0 for i in range(expression.shape[0])], # Assign all cells to one cluster 
-                        dtype=np.int32
-                    ),
-                    compression="gzip"
-                )
+            use_resolution = resolution
+        sc.tl.leiden(ad, resolution=use_resolution)
+
+        clusters = ad.obs['leiden']
+        assert tuple(ad.obs.index) == tuple(cells)
+        
+        with h5py.File(h5_f, 'r+') as f:
+            try:
+                del f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, int(resolution))]
+            except KeyError:
+                pass
+            f.create_dataset(
+                'per_tumor/{}/leiden_res_{}/cluster'.format(tumor, int(resolution)), 
+                data=np.array(clusters, dtype=np.int32), 
+                compression="gzip"
+            )
+        #else:
+        #    with h5py.File(h5_f, 'r+') as f:
+        #        try:
+        #            del f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, int(resolution))]
+        #        except KeyError:
+        #            pass
+        #        f.create_dataset(
+        #            'per_tumor/{}/leiden_res_{}/cluster'.format(tumor, int(resolution)),
+        #            data=np.array(
+        #                [0 for i in range(expression.shape[0])], # Assign all cells to one cluster 
+        #                dtype=np.int32
+        #            ),
+        #            compression="gzip"
+        #        )
 
 if __name__ == '__main__':
     main()

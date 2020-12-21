@@ -27,6 +27,15 @@ def _cluster_cmd():
     else:
         return 'python cluster.py -r {res} {{input}} > {{output}}'
 
+rule cluster_res_1:
+    input:
+        '{}/{}'.format(config['db_loc'], 'charts.h5')
+    output:
+        'cluster_res_1_log.txt'
+    run:
+        cmd= _cluster_cmd().format(res=1.0)
+        shell(cmd)
+
 rule cluster_res_2:
     input:
         '{}/{}'.format(config['db_loc'], 'charts.h5')
@@ -34,8 +43,6 @@ rule cluster_res_2:
         'cluster_res_4_log.txt'
     run:
         cmd= _cluster_cmd().format(res=2.0)
-        #cmd='python cluster.py -w -r 4.0 {input} > {output}'
-        #cmd='python cluster.py -r 4.0 {input} > {output} 2> {output}'
         shell(cmd)
 
 rule cluster_res_4:
@@ -45,11 +52,7 @@ rule cluster_res_4:
         'cluster_res_4_log.txt'
     run:
         cmd= _cluster_cmd().format(res=4.0)
-        #cmd='python cluster.py -w -r 4.0 {input} > {output}'
-        #cmd='python cluster.py -r 4.0 {input} > {output} 2> {output}'
         shell(cmd)
-
-
 
 rule dim_reduc:
     input:
@@ -61,11 +64,24 @@ rule dim_reduc:
         shell(cmd)
 
 
-def _cell_type_cmd(res):
+def _cell_type_cmd():
     if REWRITE:
         return 'python cell_type_classification.py -r {res} -w {{input}} {tmp}/cello_models {tum_params}' # > {{output}} 2> {{output}}'
     else:
         return 'python cell_type_classification.py -r {res} {{input}} {tmp}/cello_models {tum_params}' # > {{output}} 2> {{output}}'
+
+rule cell_type_res_1:
+    input:
+        '{}/{}'.format(config['db_loc'], 'charts.h5')
+    output:
+        'cell_type_res_1_log.txt'
+    run:
+        cmd=_cell_type_cmd().format(
+            res='1',
+            tmp=config['tmp_dir'],
+            tum_params=config['tumor_parameters']
+        )
+        shell(cmd)
 
 rule cell_type_res_2:
     input:
@@ -73,7 +89,7 @@ rule cell_type_res_2:
     output:
         'cell_type_res_2_log.txt'
     run:
-        cmd=_cell_type_cmd('2').format(
+        cmd=_cell_type_cmd().format(
             res='2',
             tmp=config['tmp_dir'],
             tum_params=config['tumor_parameters']
@@ -86,13 +102,26 @@ rule cell_type_res_4:
     output:
         'cell_type_res_4_log.txt'
     run:
-        cmd=_cell_type_cmd('4').format(
+        cmd=_cell_type_cmd().format(
             res='4',
             tmp=config['tmp_dir'],
             tum_params=config['tumor_parameters']
         )
         shell(cmd)
 
+
+rule gsva_cancersea_res_1:
+    input:
+        '{}/{}'.format(config['db_loc'], 'charts.h5')
+    output:
+        'gsva_cancersea_res_1_log.txt'
+    run:
+        #cmd='python gsva.py -r 1 -w {input} ./gene_sets/CancerSEA.gmt cancersea'
+        cmd='python gsva.py -r 1 -w {{input}} {db_loc}/gene_sets/CancerSEA.gmt cancersea'.format(
+            db_loc=config['db_loc']
+        )
+        shell("echo '{}'".format(cmd))
+        shell(cmd)
 
 rule gsva_cancersea_res_2:
     input:
@@ -119,6 +148,17 @@ rule gsva_cancersea_res_4:
         )
         shell(cmd)        
 
+rule gsva_hallmark_res_1:
+    input:
+        '{}/{}'.format(config['db_loc'], 'charts.h5')
+    output:
+        'gsva_hallmark_log.txt'
+    run:
+        #cmd='python gsva.py -r 1 -w {input} ./gene_sets/h.all.v7.1.symbols.gmt hallmark'
+        cmd='python gsva.py -r 1 {{input}} {db_loc}/gene_sets/h.all.v7.1.symbols.gmt hallmark'.format(
+            db_loc=config['db_loc']
+        )
+        shell(cmd)
 
 rule gsva_hallmark_res_2:
     input:

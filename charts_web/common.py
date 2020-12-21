@@ -21,8 +21,9 @@ def build_cell_type_probability_dropdown(tumor, res, html_id):
 def build_cluster_res_dropdown(idd):
     return dcc.Dropdown(
         options=[
-            {'label': '2', 'value': 2},
-            {'label': '4', 'value': 4}
+            {'label': 'Low (Res.=1)', 'value': 1},
+            {'label': 'High (Res.=2)', 'value': 2},
+            {'label': 'Highest (Res.=4)', 'value': 4}
         ],
         value=4,
         id=idd

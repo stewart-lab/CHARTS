@@ -1,0 +1,47 @@
+#
+
+rule build_GSE103224:
+    run:
+        cmd='python build_h5_GSE103224.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE123904:
+    run:
+        cmd='python build_h5_GSE123904.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE103322:
+    run:
+        cmd='python build_h5_GSE103322.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE111672:
+    run:
+        cmd='python build_h5_GSE111672.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE146026:
+    run:
+        cmd='python build_h5_GSE146026.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE72056:
+    run:
+        cmd='python build_h5_GSE72056.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE118389:
+    run:
+        cmd='python build_h5_GSE118389.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE123813:
+    run:
+        cmd='python build_h5_GSE123813_bcc.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE115978:
+    run:
+        cmd='python build_h5_GSE115978.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+

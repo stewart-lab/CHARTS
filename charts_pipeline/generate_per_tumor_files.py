@@ -142,7 +142,7 @@ def main():
             )
             df_expr.to_csv(join(out_dir, tumor, 'expression_log1_tpm.tsv'), sep='\t')
 
-            cmd = "tar -zcf {dirr}.tar.gz {dirr}".format(dirr=join(out_dir, tumor))
+            cmd = "tar -C {chdir} -zcf {dirr}.tar.gz ./{tumor}".format(dirr=join(out_dir, tumor), tumor=tumor, chdir=out_dir)
             print(cmd)
             subprocess.run(cmd, shell=True)
             cmd = "rm -r {}".format(join(out_dir, tumor))

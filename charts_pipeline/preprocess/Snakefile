@@ -55,7 +55,12 @@ rule build_GSE131928:
         cmd='python build_h5_GSE131928.py ../../raw_data2 ./../../charts_db/charts.h5'
         shell(cmd)
 
-rule build_h5_GSE131928_10x:
+rule build_GSE131928_10x:
     run:
         cmd='python build_h5_GSE131928.10x.py ../../raw_data2 ./../../charts_db/charts.h5'
+        shell(cmd)
+
+rule build_GSE144236:
+    run:
+        cmd='python build_h5_GSE144236.py ../../raw_data2 ./../../charts_db/charts.h5'
         shell(cmd)

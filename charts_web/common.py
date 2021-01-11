@@ -21,11 +21,12 @@ def build_cell_type_probability_dropdown(tumor, res, html_id):
 def build_cluster_res_dropdown(idd):
     return dcc.Dropdown(
         options=[
-            {'label': 'Low (Res.=1)', 'value': 1},
-            {'label': 'High (Res.=2)', 'value': 2},
-            {'label': 'Highest (Res.=4)', 'value': 4}
+            {'label': 'Low', 'value': '0.5'},
+            {'label': 'Medium', 'value': '1'},
+            {'label': 'High', 'value': '2'}
+            #{'label': 'Highest', 'value': '4'}
         ],
-        value=4,
+        value='1',
         id=idd
     )
 
@@ -118,7 +119,7 @@ def build_tumor_dropdown(html_id, width=None):
         style=None
     return dcc.Dropdown(
         options=options,
-        value='GSE72056.89',
+        value='GSE70630.MGH124.10x',
         id=html_id,
         style=style
     )

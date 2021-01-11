@@ -16,12 +16,10 @@ SCATTER_HEIGHT = '550px'
 FIG_DIM = 500
 
 # Default settings
-DEFAULT_NUM_DIM = 2
-DEFAULT_ALGO = 'umap'
-DEFAULT_GENE = 'SOX10'
-DEFAULT_TUMOR_1 = "PJ025"
-DEFAULT_TUMOR_2 = "PJ035"
+DEFAULT_GENE = 'GFAP'
 DEFAULT_RES = '2'
+DEFAULT_TUMOR_1 = 'GSE70630.MGH124.10x'
+DEFAULT_TUMOR_2 = 'GSE70630.MGH124.10x'
 
 # Color blind palette from:
 # https://jacksonlab.agronomy.wisc.edu/2016/05/23/15-level-colorblind-friendly-palette/

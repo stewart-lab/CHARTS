@@ -19,6 +19,8 @@ FIG_DIM = 500
 DEFAULT_NUM_DIM = 2
 DEFAULT_ALGO = 'umap'
 DEFAULT_GENE = 'SOX10'
+DEFAULT_TUMOR_1 = 'GSE70630.MGH124.10x'
+DEFAULT_TUMOR_2 = 'GSE70630.MGH124.10x'
 
 # Color blind palette from:
 # https://jacksonlab.agronomy.wisc.edu/2016/05/23/15-level-colorblind-friendly-palette/
@@ -674,7 +676,7 @@ def build_layout():
                                                         id='dim-reduc-scatter-1',
                                                         children=[
                                                             dcc.Graph(
-                                                                figure=_build_dim_reduc('PJ016', 2, DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
+                                                                figure=_build_dim_reduc(DEFAULT_TUMOR_1, 2, DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
                                                                 config=_build_plot_config('svg'),
                                                             )
                                                         ]
@@ -769,7 +771,7 @@ def build_layout():
                                                         id='dim-reduc-scatter-2',
                                                         children=[
                                                             dcc.Graph(
-                                                                figure=_build_dim_reduc('PJ016', 2, DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
+                                                                figure=_build_dim_reduc(DEFAULT_TUMOR_2, 2, DEFAULT_ALGO, DEFAULT_NUM_DIM, DEFAULT_GENE, 'gene', 2, 1.0),
                                                                 config=_build_plot_config('svg'),
                                                             )
                                                         ]

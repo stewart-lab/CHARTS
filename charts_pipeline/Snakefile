@@ -40,15 +40,6 @@ rule cluster_res_2:
         cmd= _cluster_cmd().format(res=2.0)
         shell(cmd)
 
-rule cluster_res_4:
-    input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
-    output:
-        'cluster_res_4_log.txt'
-    run:
-        cmd= _cluster_cmd().format(res=4.0)
-        shell(cmd)
-
 ###############################################################################
 #   Dimension reduction
 ###############################################################################
@@ -78,6 +69,7 @@ def _cell_type_cmd():
     else:
         return 'python cell_type_classification.py -r {res} {{input}} {tmp}/cello_models {tum_params}' # > {{output}} 2> {{output}}'
 
+
 rule cell_type_res_0_5:
     input:
         '{}/{}'.format(config['db_loc'], 'charts.h5')
@@ -90,6 +82,7 @@ rule cell_type_res_0_5:
             tum_params=config['tumor_parameters']
         )
         shell(cmd)
+
 
 rule cell_type_res_1:
     input:
@@ -104,6 +97,7 @@ rule cell_type_res_1:
         )
         shell(cmd)
 
+
 rule cell_type_res_2:
     input:
         '{}/{}'.format(config['db_loc'], 'charts.h5')
@@ -116,6 +110,7 @@ rule cell_type_res_2:
             tum_params=config['tumor_parameters']
         )
         shell(cmd)
+
 
 rule cell_type_res_4:
     input:
@@ -251,3 +246,33 @@ rule classify_malignant:
             shell('echo "{}"'.format(c))
             shell(c)
 
+###############################################################
+#   Differential expression
+###############################################################
+
+rule diff_expr_res_0_5:
+    run:
+        cmds = [
+            'python de.py -w -r 0.5 {}/{}'.format(config['db_loc'], 'charts.h5')
+        ]
+        for c in cmds:
+            shell("echo '{}'".format(c))
+            shell(c)
+
+rule diff_expr_res_1:
+    run:
+        cmds = [
+            'python de.py -w -r 1 {}/{}'.format(config['db_loc'], 'charts.h5')
+        ]
+        for c in cmds:
+            shell("echo '{}'".format(c))
+            shell(c)
+
+rule diff_expr_res_2:
+    run:
+        cmds = [
+            'python de.py -w -r 2 {}/{}'.format(config['db_loc'], 'charts.h5')
+        ]
+        for c in cmds:
+            shell("echo '{}'".format(c))
+            shell(c)

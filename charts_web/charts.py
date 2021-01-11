@@ -15,7 +15,8 @@ from app import app
 import common
 import load_data
 import dim_reduc
-import clust_compare
+#import clust_compare
+import cluster_compare
 import nav
 import de
 import footer
@@ -28,6 +29,7 @@ def build_layout():
             dbc.Container(fluid=True, children=[
                 dcc.Tabs([
                     dim_reduc.build_layout(),
+                    cluster_compare.build_layout(),
                     de.build_layout()
                     #clust_compare.build_layout()
                 ]),

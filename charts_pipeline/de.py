@@ -1,9 +1,3 @@
-import matplotlib as mpl
-#mpl.use('Agg')
-import seaborn as sns
-from matplotlib import pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 import scanpy as sc
@@ -12,28 +6,22 @@ import os
 from os.path import join
 import subprocess
 from anndata import AnnData
-import phate
 from optparse import OptionParser
 from collections import defaultdict
-import gseapy as gp
 import h5py
-import run_gsva
 
-sys.path.append('..')
-
-GENE_SETS = ['GO_Biological_Process_2018']
-#GENE_SETS = ['GO_Molecular_Function_2018']
+N_GENES = 50
 
 def main():
     usage = "" # TODO
     parser = OptionParser(usage=usage)
-    parser.add_option("-o", "--out_dir", help="Directory to write output")
     parser.add_option("-w", "--overwrite", action='store_true', help="Overwrite data in the HDF5 file if there's a dataset already present")
+    parser.add_option("-r", "--resolution", help="Clustering resolution")
     (options, args) = parser.parse_args()
 
     h5_f = args[0]
     overwrite = options.overwrite
-    out_dir = options.out_dir
+    res = options.resolution
 
     the_tumors = set()
     with h5py.File(h5_f, 'r') as f:
@@ -42,6 +30,15 @@ def main():
     print(the_tumors)
 
     for tumor in the_tumors:
+
+        # Delete the tumor's data if we're overwriting
+        with h5py.File(h5_f, 'r+') as f:
+            if overwrite:
+                try:
+                    del f['de/leiden_res_{}/{}'.format(res, tumor)]
+                except Exception as e:
+                    pass
+
         print("Computing enrichment scores for tumor {}".format(tumor))
         with h5py.File(h5_f, 'r') as f:
             cells = [
@@ -52,12 +49,12 @@ def main():
                 str(x)[2:-1]
                 for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
             ]
-            clusters = f['per_tumor/{}/cluster'.format(tumor)][:]
+            clusters = f['per_tumor/{}/leiden_res_{}/cluster'.format(tumor, res)][:]
             expression = f['per_tumor/{}/log1_tpm'.format(tumor)][:]
 
         # Convert expression back to TPM
         # for doing fold-change assessment
-        expression = np.exp(expression)+1
+        #expression = np.exp(expression)+1
 
         # Map each cluster to its cells
         clust_to_cells = defaultdict(lambda: [])
@@ -84,37 +81,47 @@ def main():
             )
         )
 
+        # Map each gene to its index
+        gene_to_index = {
+            gene: index
+            for index, gene in enumerate(genes)
+        }
+
         # Run differential expression
         clust_to_de_df = run_de(ad)
         with h5py.File(h5_f, 'r+') as f:
             try:
-                f.create_group('de')
+                f.create_group('de/leiden_res_{}'.format(res))
             except:
                 pass
             for clust, df in clust_to_de_df.items():
-                tum_clust = '{}_{}'.format(tumor, clust)
-                genes = np.array([
-                    x.encode('utf-8')
-                    for x in df.index
-                ])
-                if overwrite:
-                    try:
-                        del f['de/{}'.format(tumor_clust)]
-                    except:
-                        pass
-                if tum_clust not in f['de'].keys():
-                    print("writing data for tumor cluster {}".format(tum_clust))
-                    f['de'].create_group(tum_clust)
-                    f['de/{}'.format(tum_clust)].create_dataset('gene', data=genes)
-                    f['de/{}'.format(tum_clust)].create_dataset('log_fc', data=np.array(df['log_fc']))
-                    f['de/{}'.format(tum_clust)].create_dataset('pval_adj', data=np.array(df['pval_adj']))
-                else:
-                    print("Skipping adding cluster {} to database. Already present.".format(tum_clust))
+                #genes = np.array([
+                #    x.encode('utf-8')
+                #    for x in df.index
+                #])
 
+                # Get indices of most significant genes
+                gene_indices = np.array([
+                    gene_to_index[gene]
+                    for gene in df.index
+                ])
+                if tumor not in f['de/leiden_res_{}'.format(res)].keys() \
+                    or str(clust) not in f['de/leiden_res_{}/{}'.format(res, tumor)].keys():
+                    print("Writing data for tumor {} cluster {}".format(tumor, clust))
+                    try:
+                        f['de/leiden_res_{}'.format(res)].create_group(tumor)
+                    except Exception as e:
+                        pass
+                    f['de/leiden_res_{}/{}'.format(res, tumor)].create_group(clust)
+                    f['de/leiden_res_{}/{}/{}'.format(res, tumor, clust)].create_dataset('gene_index', data=gene_indices, compression="gzip")
+                    f['de/leiden_res_{}/{}/{}'.format(res, tumor, clust)].create_dataset('log_fc', data=np.array(df['log_fc']), compression="gzip")
+                    #f['de/leiden_res_{}/{}'.format(res, tum_clust)].create_dataset('pval', data=np.array(df['pval']), compression="gzip")
+                else:
+                    print("Skipping adding tumor {}, cluster {} to database. Already present.".format(tumor, cluster))
 
 def run_de(ad):
-
     try:
+    #if True:
         sc.tl.rank_genes_groups(
             ad,
             groupby='cluster',
@@ -127,7 +134,7 @@ def run_de(ad):
                 gene: pval
                 for gene, pval in zip(
                     ad.uns['rank_genes_groups']['names'][clust],
-                    ad.uns['rank_genes_groups']['pvals_adj'][clust]
+                    ad.uns['rank_genes_groups']['pvals'][clust]
                 )
             }
             gene_to_logfold = {
@@ -137,14 +144,24 @@ def run_de(ad):
                     ad.uns['rank_genes_groups']['logfoldchanges'][clust]
                 )
             }
-            de_genes = [
-                gene
-                for gene in gene_to_pval.keys()
-                if gene_to_pval[gene] < 0.05
-            ]
+            #de_genes = [
+            #    gene
+            #    for gene in gene_to_pval.keys()
+            #    if gene_to_pval[gene] < 0.05
+            #]
+
+            # Sort genes by their p-value
+            de_genes = sorted(gene_to_pval.keys(), key=lambda x: gene_to_pval[x])
+            de_genes = de_genes[:N_GENES]
+            
+
+            print('Top ten genes:')
+            print([(g, gene_to_pval[g]) for g in de_genes[:10]])
+            #print('Selected genes: ', de_genes[:100])
+
             df = pd.DataFrame(
                 data={
-                    'pval_adj': [
+                    'pval': [
                         gene_to_pval[g]
                         for g in de_genes
                     ],
@@ -160,7 +177,7 @@ def run_de(ad):
     except ZeroDivisionError:
         return {
             clust: pd.DataFrame({
-                'pval_adj': [], 
+                'pval': [], 
                 'log_fc': []
             }, index=[])
             for clust in sorted(set(ad.obs['cluster']))

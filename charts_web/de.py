@@ -20,21 +20,23 @@ PAGE_SIZE = 50
     Output(component_id='de-table-1', component_property='data'),
     [
         Input(component_id='select-tumor-de-1', component_property='value'),
+        Input(component_id='select-cluster-res-de-1', component_property='value'),
         Input(component_id='select-cluster-de-1', component_property='value')
     ]
 )
-def update_de_table_1(tumor, cluster):
-    return build_table_data(tumor, cluster, 1)
+def update_de_table_1(tumor, res, cluster):
+    return build_table_data(res, tumor, cluster, 1)
 
 @app.callback(
     Output(component_id='de-table-2', component_property='data'),
     [
         Input(component_id='select-tumor-de-2', component_property='value'),
+        Input(component_id='select-cluster-res-de-2', component_property='value'),
         Input(component_id='select-cluster-de-2', component_property='value')
     ]
 )
-def update_de_table_2(tumor, cluster):
-    return build_table_data(tumor, cluster, 2)
+def update_de_table_2(tumor, res, cluster):
+    return build_table_data(res, tumor, cluster, 2)
 
 
 @app.callback(
@@ -43,14 +45,15 @@ def update_de_table_2(tumor, cluster):
         Output(component_id='select-cluster-de-1', component_property='value')
     ],
     [
-        Input(component_id='select-tumor-de-1', component_property='value')
+        Input(component_id='select-tumor-de-1', component_property='value'),
+        Input(component_id='select-cluster-res-de-1', component_property='value')
     ]
 )
-def update_select_cluster_de_1(tumor):
+def update_select_cluster_de_1(tumor, res):
     return (
         [
             {'label': 'Cluster {}'.format(clust), 'value': clust}
-            for clust in sorted(set(load_data.load_tumor_clusters(tumor)))
+            for clust in sorted(set(load_data.load_tumor_clusters(tumor, res)))
         ],
         '0'
     )
@@ -62,28 +65,29 @@ def update_select_cluster_de_1(tumor):
         Output(component_id='select-cluster-de-2', component_property='value')
     ],
     [
-        Input(component_id='select-tumor-de-2', component_property='value')
+        Input(component_id='select-tumor-de-2', component_property='value'),
+        Input(component_id='select-cluster-res-de-2', component_property='value')
     ]
 )
-def update_select_cluster_de_2(tumor):
+def update_select_cluster_de_2(tumor, res):
     return (
         [
             {'label': 'Cluster {}'.format(clust), 'value': clust}
-            for clust in sorted(set(load_data.load_tumor_clusters(tumor)))
+            for clust in sorted(set(load_data.load_tumor_clusters(tumor, res)))
         ],
         '0'
     )
 
 
-def build_table_data(tumor, cluster, table_id):
-    genes, log_fc, pval_adj = load_data.load_de(tumor, cluster)
+def build_table_data(res, tumor, cluster, table_id):
+    genes, log_fc, sig_rank = load_data.load_de(res, tumor, cluster)
     abs_log_fc = map(abs, log_fc)
     df = pd.DataFrame(
         {
             'de-genes-col-{}'.format(table_id): genes,
             'de-lfc-col-{}'.format(table_id): log_fc,
             'de-alfc-col-{}'.format(table_id): abs_log_fc,
-            'de-pval-col-{}'.format(table_id): pval_adj
+            'de-sig-col-{}'.format(table_id): sig_rank
         }
     )
     return df.to_dict('records')
@@ -91,7 +95,7 @@ def build_table_data(tumor, cluster, table_id):
 
 def build_layout():
     layout = dcc.Tab(
-        label='Differential Expression',
+        label='Cluster Markers',
         children=[
             dbc.Row(html.Hr(), style={'height': '3%'}),
             html.Div(['Compare differentially expressed genes between tumor sub-clusters of cells.']),
@@ -108,17 +112,43 @@ def build_layout():
                         }
                     ),
                     dbc.CardBody([
-                        html.H6("Select a tumor:"),
-                        common.build_tumor_dropdown('select-tumor-de-1'),
-                        html.H6("Select a cluster:"),
-                        dcc.Dropdown(
-                            options=[
-                                {'label': 'Cluster {}'.format(clust), 'value': clust}
-                                for clust in sorted(set(load_data.load_tumor_clusters(DEFAULT_TUMOR_1)))
-                            ],  
-                            id='select-cluster-de-1',
-                            value='0'
-                        ),
+                        html.Div([
+                            dbc.Row(children=[
+                                dbc.Col([
+                                    html.H6("Select a tumor:")
+                                ], width=100, style={"width": "40%"}),
+                                dbc.Col([
+                                    common.build_tumor_dropdown('select-tumor-de-1')
+                                ])
+                            ])
+                        ]),
+                        html.Div([
+                            dbc.Row(children=[
+                                dbc.Col([
+                                    html.H6("Select cluster resolution:")
+                                ], width=100, style={"width": "40%"}),
+                                dbc.Col([
+                                    common.build_cluster_res_dropdown('select-cluster-res-de-1')
+                                ])
+                            ])
+                        ]),
+                        html.Div([
+                            dbc.Row(children=[
+                                dbc.Col([
+                                    html.H6("Select a cluster:")
+                                ], width=100, style={"width": "40%"}),
+                                dbc.Col([
+                                    dcc.Dropdown(
+                                        options=[
+                                            {'label': 'Cluster {}'.format(clust), 'value': clust}
+                                            for clust in sorted(set(load_data.load_tumor_clusters(DEFAULT_TUMOR_1, 1)))
+                                        ],  
+                                        id='select-cluster-de-1',
+                                        value='0'
+                                    )
+                                ])
+                            ])
+                        ]),
                         dbc.Row(html.Hr(), style={'height': '0.5%'}),
                         DataTable(
                             columns=[
@@ -135,11 +165,11 @@ def build_layout():
                                     "name": "Abs. log-FC"
                                 },
                                 {
-                                    "id": "de-pval-col-1",
-                                    "name": "FDR"
+                                    "id": "de-sig-col-1",
+                                    "name": "Significance Rank"
                                 }
                             ],
-                            data=build_table_data("PJ025", "0", 1),
+                            data=build_table_data("1", "PJ025", "0", 1), # TODO add resolution
                             style_cell_conditional=[
                                 {
                                     'textAlign': 'center'
@@ -166,17 +196,43 @@ def build_layout():
                         }
                     ),
                     dbc.CardBody([
-                        html.H6("Select a tumor:"),
-                        common.build_tumor_dropdown('select-tumor-de-2'),
-                        html.H6("Select a cluster:"),
-                        dcc.Dropdown(
-                            options=[
-                                {'label': 'Cluster {}'.format(clust), 'value': clust}
-                                for clust in sorted(set(load_data.load_tumor_clusters(DEFAULT_TUMOR_2)))
-                            ],  
-                            id='select-cluster-de-2',
-                            value='0'
-                        ),
+                        html.Div([
+                            dbc.Row(children=[
+                                dbc.Col([
+                                    html.H6("Select a tumor:")
+                                ], width=100, style={"width": "40%"}),
+                                dbc.Col([
+                                    common.build_tumor_dropdown('select-tumor-de-2')
+                                ])
+                            ])
+                        ]),
+                        html.Div([
+                            dbc.Row(children=[
+                                dbc.Col([
+                                    html.H6("Select cluster resolution:")
+                                ], width=100, style={"width": "40%"}),
+                                dbc.Col([
+                                    common.build_cluster_res_dropdown('select-cluster-res-de-2')
+                                ])
+                            ])
+                        ]),
+                        html.Div([
+                            dbc.Row(children=[
+                                dbc.Col([
+                                    html.H6("Select a cluster:")
+                                ], width=100, style={"width": "40%"}),
+                                dbc.Col([
+                                    dcc.Dropdown(
+                                        options=[
+                                            {'label': 'Cluster {}'.format(clust), 'value': clust}
+                                            for clust in sorted(set(load_data.load_tumor_clusters(DEFAULT_TUMOR_1, 1)))
+                                        ],
+                                        id='select-cluster-de-2',
+                                        value='0'
+                                    )
+                                ])
+                            ])
+                        ]),
                         dbc.Row(html.Hr(), style={'height': '0.5%'}),
                         DataTable(
                             columns=[
@@ -193,11 +249,11 @@ def build_layout():
                                     "name": "Abs. log-FC"
                                 },
                                 {
-                                    "id": "de-pval-col-2",
-                                    "name": "FDR"
+                                    "id": "de-sig-col-2",
+                                    "name": "Significance Rank"
                                 }
                             ],
-                            data=build_table_data("PJ025", "0", 1),
+                            data=build_table_data("1", "PJ025", "0", 1), # TODO add resolution
                             style_cell_conditional=[
                                 {
                                     'textAlign': 'center'

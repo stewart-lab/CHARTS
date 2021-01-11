@@ -118,7 +118,6 @@ def load_tumor_cell_type_classifications(tumor, res):
             str(x)[2:-1]
             for x in f['per_tumor/{}/leiden_res_{}/predicted_cell_type'.format(tumor, res)]
         ]
-        print(cell_types_per_clust)
         # Map each cell to its cell type
         cell_types = [
             cell_types_per_clust[cell_to_clust[cell]]
@@ -626,20 +625,20 @@ def load_gsva_compare_cluster(collection_name):
         index=clusts,
         columns=cols
     )
-    print(df)
     return df
 
 
-def load_de(tumor, cluster):
-    tum_clust = '{}_{}'.format(tumor, cluster)
+def load_de(res, tumor, cluster):
     with h5py.File(DB_LOC, 'r') as f:
-        genes = [
+        all_genes = np.array([
             str(x)[2:-1]
-            for x in f['de/{}/gene'.format(tum_clust)][:]
-        ]
-        log_fc = f['de/{}/log_fc'.format(tum_clust)][:]
-        pval_adj = f['de/{}/pval_adj'.format(tum_clust)][:]
-    return genes, log_fc, pval_adj
+            for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
+        ])
+        de_indices = f['de/leiden_res_{}/{}/{}/gene_index'.format(res, tumor, cluster)][:]
+        genes = all_genes[de_indices]
+        log_fc = f['de/leiden_res_{}/{}/{}/log_fc'.format(res, tumor, cluster)][:]
+        sig_rank = list(np.arange(1,len(de_indices)+1))
+    return genes, log_fc, sig_rank
 
 
 def dataset_summary():

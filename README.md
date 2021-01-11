@@ -4,7 +4,7 @@ CHARTS is a web application, and associated backened analysis pipeline, for expl
 
 ## Exploring CHARTS data with Scanpy
 
-Individual tumor datasets are available to download, as tab-separated value files, from the CHARTS website at [https://morgridge.charts.org](https://charts.morgridge.org/download). Once a dataset is downloaded, it can be loaded and explored with [Scanpy](https://scanpy.readthedocs.io/en/stable/). We have implemented a function, with examples, in a [Jupyter notebook](https://github.com/stewart-lab/CHARTS/blob/master/explore_charts_results.ipynb) for loading data into Scanpy's AnnData object.
+Individual tumor datasets are available to download, as tab-separated value files, from the CHARTS website at [https://morgridge.charts.org/download](https://charts.morgridge.org/download). Once a dataset is downloaded, it can be loaded and explored with [Scanpy](https://scanpy.readthedocs.io/en/stable/). We have implemented a function, with examples, in a [Jupyter notebook](https://github.com/stewart-lab/CHARTS/blob/master/explore_charts_results.ipynb) for loading data into Scanpy's AnnData object.
 
 ## Running the CHARTS web application locally
 

@@ -534,9 +534,1100 @@
                 "UBERON:0002066",
                 "UBERON:0004765"
             ]
+        },
+        "GSE123814.su001.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su001.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su002.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE123814.su002.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su003.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su003.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su004.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su004.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su005.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su005.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su006.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su006.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su007.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su007.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su008.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su008.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su009.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su009.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su010.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su010.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su012.post_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        }, 
+        "GSE123814.su012.pre_treatment": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel194": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel102": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel112": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel98": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel110": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel103": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel75": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel105": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel106": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel116": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel478": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel126": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel129pa": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel129pb": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel04": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel121": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE115978.Mel128": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S1": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S2": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S3": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S4": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S5": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S6": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S7": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S8": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S9": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S11": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S12": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S13": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S14": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE117891.S15": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH36": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH53": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH54": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH60": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH97": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH93": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH101": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH100": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH102": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH110": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH113": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH115": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH121": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH122": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH124": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH125": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT749": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT771": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT830": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH85": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT1160": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT1187": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT786": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGHBT920": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH66": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH105": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH104": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE131928.MGH106": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH102.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH105.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH105A.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH115.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGHBT1187.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH124.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH125.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE70630.MGH126.10x": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P1": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P2": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P3": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P4": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P5": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P6": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P7": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P8": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P9": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE144236.P10": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE102130.MUV1": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE102130.MUV5": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE102130.MUV10": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE102130.BCH836": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE102130.BCH869": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE102130.BCH1126": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH42": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH61": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH43": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH45": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH44": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH56": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH64": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH57": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH103": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE89567.MGH107": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC02": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC03LN": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC04": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC05": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC07": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC07LN": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE75688.BC09": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM041L": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM069": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM064": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM067L": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM059": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM063": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM066": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM061": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM062": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.UMM065": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE139829.BSSR0022": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE134520.EGC": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765",
+                "UBERON:0000358",
+                "UBERON:0001557",
+                "UBERON:0002367"
+            ]
+        },
+        "GSE140312.primary": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
+        },
+        "GSE140312.metastasis": {
+            "exclude_anatomical_terms_from_cell_types": [
+                "UBERON:0002048",
+                "UBERON:0002107",
+                "UBERON:0002066",
+                "UBERON:0004765"
+            ]
         }
     },
-    "study_to_tumors": {
+    "study_to_tumors_HOLD": {
         "GSE103224": [
             "PJ016",
             "PJ017",
@@ -601,7 +1692,6 @@
             "GSE103322.28",
             "GSE103322.5",
             "GSE103322.6",
-            "GSE103322.7",
             "GSE103322.8"
         ],
         "GSE111672": [
@@ -615,6 +1705,171 @@
             "GSE118389.PT081",
             "GSE118389.PT084",
             "GSE118389.PT126"
+        ],
+        "GSE123814_pre_treatment": [
+            "GSE123814.su001.pre_treatment", 
+            "GSE123814.su002.pre_treatment", 
+            "GSE123814.su003.pre_treatment", 
+            "GSE123814.su004.pre_treatment", 
+            "GSE123814.su005.pre_treatment", 
+            "GSE123814.su006.pre_treatment", 
+            "GSE123814.su007.pre_treatment", 
+            "GSE123814.su008.pre_treatment", 
+            "GSE123814.su009.pre_treatment", 
+            "GSE123814.su010.pre_treatment", 
+            "GSE123814.su012.pre_treatment"
+        ],
+        "GSE123814_post_treatment": [
+            "GSE123814.su001.post_treatment", 
+            "GSE123814.su002.post_treatment", 
+            "GSE123814.su003.post_treatment", 
+            "GSE123814.su004.post_treatment", 
+            "GSE123814.su005.post_treatment", 
+            "GSE123814.su006.post_treatment", 
+            "GSE123814.su007.post_treatment", 
+            "GSE123814.su008.post_treatment", 
+            "GSE123814.su009.post_treatment", 
+            "GSE123814.su010.post_treatment", 
+            "GSE123814.su012.post_treatment"
+        ],
+        "GSE115978": [
+            "GSE115978.Mel194",
+            "GSE115978.Mel102",
+            "GSE115978.Mel112",
+            "GSE115978.Mel98",
+            "GSE115978.Mel110",
+            "GSE115978.Mel103",
+            "GSE115978.Mel75",
+            "GSE115978.Mel105",
+            "GSE115978.Mel106",
+            "GSE115978.Mel116",
+            "GSE115978.Mel478",
+            "GSE115978.Mel126",
+            "GSE115978.Mel129pa",
+            "GSE115978.Mel04.3",
+            "GSE115978.Mel121.1",
+            "GSE115978.Mel128"
+        ],
+        "GSE117891": [
+            "GSE117891.S1",
+            "GSE117891.S2",
+            "GSE117891.S3",
+            "GSE117891.S4",
+            "GSE117891.S5",
+            "GSE117891.S6",
+            "GSE117891.S7",
+            "GSE117891.S8",
+            "GSE117891.S9",
+            "GSE117891.S11",
+            "GSE117891.S12",
+            "GSE117891.S13",
+            "GSE117891.S14",
+            "GSE117891.S15"
+        ],
+        "GSE70630": [
+            "GSE70630.MGH36",
+            "GSE70630.MGH53",
+            "GSE70630.MGH54",
+            "GSE70630.MGH60",
+            "GSE70630.MGH97",
+            "GSE70630.MGH93"
+        ],
+        "GSE131928": [
+            "GSE131928.MGH101",
+            "GSE131928.MGH100",
+            "GSE131928.MGH102",
+            "GSE131928.MGH110",
+            "GSE131928.MGH113",
+            "GSE131928.MGH115",
+            "GSE131928.MGH121",
+            "GSE131928.MGH122",
+            "GSE131928.MGH124",
+            "GSE131928.MGH125",
+            "GSE131928.MGHBT749",
+            "GSE131928.MGHBT771",
+            "GSE131928.MGHBT830",
+            "GSE131928.MGH85",
+            "GSE131928.MGHBT1160",
+            "GSE131928.MGHBT1187",
+            "GSE131928.MGHBT786",
+            "GSE131928.MGHBT920",
+            "GSE131928.MGH66",
+            "GSE131928.MGH105",
+            "GSE131928.MGH104",
+            "GSE131928.MGH106"
+        ],
+        "GSE70630": [
+            "GSE70630.MGH102.10x",
+            "GSE70630.MGH115.10x",
+            "GSE70630.MGHBT1187.10x",
+            "GSE70630.MGH124.10x",
+            "GSE70630.MGH125.10x",
+            "GSE70630.MGH126.10x",
+            "GSE70630.MGH105.10x"
+        ],
+        "GSE144236": [
+            "GSE144236.P1",
+            "GSE144236.P2",
+            "GSE144236.P3",
+            "GSE144236.P4",
+            "GSE144236.P5",
+            "GSE144236.P6",
+            "GSE144236.P7",
+            "GSE144236.P8",
+            "GSE144236.P9",
+            "GSE144236.P10"
+        ],
+        "GSE102130": [
+            "GSE102130.MUV1",
+            "GSE102130.MUV5",
+            "GSE102130.MUV10",
+            "GSE102130.BCH836",
+            "GSE102130.BCH869",
+            "GSE102130.BCH1126"
+        ],
+        "GSE89567": [
+            "GSE89567.MGH42",
+            "GSE89567.MGH61",
+            "GSE89567.MGH43",
+            "GSE89567.MGH45",
+            "GSE89567.MGH44",
+            "GSE89567.MGH56",
+            "GSE89567.MGH64",
+            "GSE89567.MGH57",
+            "GSE89567.MGH103",
+            "GSE89567.MGH107"
+        ],
+        "GSE75688": [
+            "GSE75688.BC02",
+            "GSE75688.BC03LN",
+            "GSE75688.BC04",
+            "GSE75688.BC05",
+            "GSE75688.BC07",
+            "GSE75688.BC09"
+        ],
+        "GSE139829": [
+            "GSE139829.UMM041L",
+            "GSE139829.UMM069",
+            "GSE139829.UMM064",
+            "GSE139829.UMM067L",
+            "GSE139829.UMM059",
+            "GSE139829.UMM063",
+            "GSE139829.UMM066",
+            "GSE139829.UMM061",
+            "GSE139829.UMM062",
+            "GSE139829.UMM065",
+            "GSE139829.BSSR0022"
+        ]
+    },
+    "study_to_tumors": {
+        "GSE134520": [
+            "GSE134520.EGC"
+        ],
+        "GSE140312.primary": [
+            "GSE140312.primary"
+        ],
+        "GSE140312.metastasis": [
+            "GSE140312.metastasis"
         ]
     }
 }

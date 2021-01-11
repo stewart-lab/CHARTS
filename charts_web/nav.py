@@ -6,18 +6,19 @@ CHARTS_LOGO = "https://github.com/mbernste/cancer-single-cell-biomarker/raw/mast
 
 LAYOUT = dbc.NavbarSimple(
     children=[
-      dbc.NavItem(dbc.NavLink("Explore Data", href="/")),
-      dbc.NavItem(dbc.NavLink("About", href="/about")),
-      dbc.DropdownMenu(
-         nav=True,
-         in_navbar=True,
-         label="Menu",
-         children=[
-            dbc.DropdownMenuItem("FAQ",  href="/faq"),
-            dbc.DropdownMenuItem("Datasets",  href="/data_set_summary")
-                  ],
-              ),
+        dbc.NavItem(dbc.NavLink("Explore Data", href="/")),
+        dbc.NavItem(dbc.NavLink("About", href="/about")),
+        dbc.DropdownMenu(
+            nav=True,
+            in_navbar=True,
+            label="Menu",
+            children=[
+                dbc.DropdownMenuItem("FAQ",  href="/faq"),
+                dbc.DropdownMenuItem("Datasets Summary",  href="/data_set_summary"),
+                dbc.DropdownMenuItem("Downloads",  href="/download"),
             ],
+        ),
+    ],
     brand="CHARTS: Characterizing Tumor Subpopulations",
     brand_style={"font-size": "200%"},
     brand_href="/charts",

@@ -157,6 +157,7 @@ def load_tumor_clusters_for_cells(tumor, res):
 
 
 def load_tumor_gene(tumor, gene):
+    gene = gene.lower().strip()
     with h5py.File(DB_LOC, 'r') as f:
         cells = [
             str(x)[2:-1]
@@ -167,7 +168,7 @@ def load_tumor_gene(tumor, gene):
             for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
         ]
         gene_name_to_index = {
-            gene_name: index
+            gene_name.lower(): index
             for index, gene_name in enumerate(gene_names)
         }
         if gene in gene_name_to_index:

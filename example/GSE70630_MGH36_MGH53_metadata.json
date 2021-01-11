@@ -1,0 +1,24 @@
+"My_Tumor_1": {
+    "pub_url": "https://pubmed.ncbi.nlm.nih.gov/27806376/",
+    "pub_name": "Tirosh et al. (2016)",
+    "age": "67",
+    "sex": "male",
+    "cancer_type": "oligodendroglioma",
+    "cancer_type_abbrev": "LGG",
+    "grade": "2-3",
+    "stage": "NA",
+    "genomic_alteration": "R132H",
+    "lesion_type": "primary"
+},
+"My_Tumor_2": {
+    "pub_url": "https://pubmed.ncbi.nlm.nih.gov/27806376/",
+    "pub_name": "Tirosh et al. (2016)",
+    "age": "31",
+    "sex": "male",
+    "cancer_type": "oligodendroglioma",
+    "cancer_type_abbrev": "LGG",
+    "grade": "2",
+    "stage": "NA",
+    "genomic_alteration": "R132H",
+    "lesion_type": "primary"
+}

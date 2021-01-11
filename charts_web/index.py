@@ -21,6 +21,7 @@ import about
 import charts
 import dataset_summary
 import faq
+import download
 
 @app.callback(Output('page-content', 'children'),
             [Input('url', 'pathname')])
@@ -32,6 +33,8 @@ def display_page(pathname):
         return dataset_summary.build_layout()
     elif pathname == '/faq':
         return faq.build_layout()
+    elif pathname == '/download':
+        return download.build_layout()
     else:
         return charts.build_layout()
 

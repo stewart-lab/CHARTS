@@ -2,10 +2,6 @@
 
 CHARTS is a web application, and associated backened analysis pipeline, for exploring publicly available single-cell RNA-seq data from human tumors. 
 
-## Exploring CHARTS data with Scanpy
-
-Individual tumor datasets are available to download, as tab-separated value files, from the CHARTS website at [https://morgridge.charts.org/download](https://charts.morgridge.org/download). Once a dataset is downloaded, it can be loaded and explored with [Scanpy](https://scanpy.readthedocs.io/en/stable/). We have implemented a function, with examples, in a [Jupyter notebook](https://github.com/stewart-lab/CHARTS/blob/master/explore_charts_results.ipynb) for loading data into Scanpy's AnnData object.
-
 ## Running the CHARTS web application locally
 
 ### Install dependencies
@@ -28,7 +24,8 @@ To run the server locally, perform the following steps:
 
 ## Running the pipeline on your own single-cell data
 
-Here we document the steps required to run the backend pipeline on your own data and add the results to the CHARTS database for exploring via a local instance of the CHARTS web application.
+Here we document the steps required to run the backend pipeline on your own data and add the results to the CHARTS database for exploring via a local instance of the CHARTS web application. To provide an example, we'll demonstrate how to run the CHARTS pipeline on the data in 
+[example/GSE70630_MGH36_MGH53.tsv.gz](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53.tsv.gz). This dataset comprises cells from two tumors in [GSE70630](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70630) by [Tirosh et al. (2016)](https://pubmed.ncbi.nlm.nih.gov/27806376/) (Specifically, the supplemental file "GSE70630_OG_processed_data_v2"). See the Jupyter notebook [example/create_toy_data_GSE70630.ipynb](https://github.com/stewart-lab/CHARTS/blob/master/example/create_toy_data_GSE70630.ipynb) to see how this dataset was generated. 
 
 ### Install dependencies
 
@@ -55,20 +52,43 @@ The  R dependencies are as follows:
 
 There are two main steps required to run the pipeline on your own data.  The first, involves storing the raw data into the backend HDF5 database, located in `charts_db/charts.h5`.  The second involves running the computational pipeline on this raw data.
 
-#### Loading scRNA-seq data into the database
+#### 1. Set pipeline parameters
+
+The file [charts_pipeline/config](https://github.com/stewart-lab/CHARTS/blob/master/charts_pipeline/config.json) points the pipeline to the database and other required resources. Update these fields to point to the `charts_db` directory, a location to store temporary artifacts from the pipeline, and a directory to store the pipeline's log files.
+
+#### 2. Load expression data into the HDF5 database
 
 Each tumor's expression matrix is stored separately in `charts_db/charts.h5`.  These expression matrices must be in log transcriptipts per million (TPM). Specifically, log(TPM+1) where log is the natural logarithm.  For each tumor, there are three datasets that must be instantiated:
 * `/per_tumor/<TUMORNAME>/log1_tpm`: An NxM matrix of log(TPM+1) expression values where N are the number of cells and M are the number of genes. 
 * `/per_tumor/<TUMORNAME>/cell`: An N length vector of strings encoding each cell's ID
 * `/per_tumor/<TUMORNAME>/gene_name`: An M length vector of strings encoding each gene's symbol
 
-These datasets may be populated using your favorite programming language. We use Python's [h5py](http://www.h5py.org) package for dealing with HDF5 files. 
+These datasets may be populated using your favorite programming language. We use Python's [h5py](http://www.h5py.org) package for dealing with HDF5 files. As an example, see [example/add_expression_data_to_charts_db.ipynb](https://github.com/stewart-lab/CHARTS/blob/master/example/add_expression_data_to_charts_db.ipynb) where we add the [example/GSE70630_MGH36_MGH53.tsv.gz](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53.tsv.gz) dataset to the CHARTS HDF5 file. 
 
-#### Add the metadata for new tumors
+#### 3. Enter metadata for new tumors
 
-For each new tumor added to the dataset, update the tumor metadata file located at `charts_db/tumor_metadata.json` to include information describing this tumor. This JSON file maps each tumor name to its characteristics.  Currently, the following entries are required for each tumor:
-* `cancer_type`: An english description of the cancer type (e.g. melanoma).
-* `cancer_type_abbrev`: The TCGA abbreviation for the cancer type (from [https://gdc.cancer.gov/resources-tcga-users/tcga-code-tables/tcga-study-abbreviations](https://gdc.cancer.gov/resources-tcga-users/tcga-code-tables/tcga-study-abbreviations)).
+For each new tumor added to the dataset, update the tumor metadata file located at `charts_db/tumor_metadata.json` to include information describing this tumor. This JSON file maps each tumor name to its characteristics:
+
+```
+{
+        "pub_url": "",
+        "pub_name": "",
+        "age": "",
+        "sex": "",
+        "cancer_type": "",
+        "cancer_type_abbrev": "",
+        "grade": "",
+        "stage": "",
+        "genomic_alteration": "",
+        "lesion_type": ""
+    }
+```
+
+Note, the pipeline will run fine if a field is blank.  For the example data in [example/GSE70630_MGH36_MGH53.tsv.gz](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53.tsv.gz), see [example/GSE70630_MGH36_MGH53_metadata.json](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53_metadata.json) for example metadata to add to `charts_db/tumor_metadata.json`.
+
+### 4. Define tumor-specific pipeline parameters
+
+The file [charts_pipeline/tumor_parameters.json](https://github.com/stewart-lab/CHARTS/blob/master/charts_pipeline/tumor_parameters.json) stores tumor-specific parameters. There is one particular piece of data that must be added to this file for the CHARTS pipeline to run: the group of tumors to consider when calculating the malignancy scores.  Specifically, the malignancy score calculation looks at multiple tumors from a single study and attempts to find cells whose genomic alterations are unique to its tumor. The idea here is that each individual tumor is associated with a relatively unique copy-number profile and thus, malignant cells' copy number profiles should cluster with only cells from the same tumor.  Thus, we must supply the CHARTS pipeline with the group of tumors that will be considered in unison. Each group is stored in the `study_to_tumors` field. In this field, each key is the name of a study and the values are all of the datasets included in that study that will be considered in unison for detecting malignant cells.
 
 #### Running the computational pipeline
 

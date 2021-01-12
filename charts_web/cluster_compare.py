@@ -165,7 +165,6 @@ def update_dim_reduc_2(tumor_id, res, clust, gene, img_format):
     )
 
 
-
 def _build_dist_plot(tumor_id, res, gene, clust):
     df = load_data.load_tumor_gene_w_cluster(tumor_id, res, gene)
     if clust == 'all':
@@ -180,6 +179,36 @@ def _build_dist_plot(tumor_id, res, gene, clust):
     )
     return fig
 
+
+@app.callback(
+    Output(component_id='color-by-feature-container-dist-1', component_property='children'),
+    [
+        Input(component_id='select-tumor-dist-1', component_property='value')
+    ]
+)
+def update_feature_category_selector_1(tumor):
+    return build_gene_selector('color-by-feature-dist-1', tumor)
+
+
+@app.callback(
+    Output(component_id='color-by-feature-container-dist-2', component_property='children'),
+    [
+        Input(component_id='select-tumor-dist-2', component_property='value')
+    ]
+)
+def update_feature_category_selector_1(tumor):
+    return build_gene_selector('color-by-feature-dist-2', tumor)
+
+
+def build_gene_selector(idd, tumor):
+    return dcc.Dropdown(
+        options=[
+            {'label': gene, 'value': gene}
+            for gene in load_data.load_genes_sorted(tumor)
+        ],
+        id=idd,
+        value=DEFAULT_GENE
+    )
 
 def _build_control_panel(plot_num):
     return [
@@ -231,7 +260,14 @@ def _build_control_panel(plot_num):
                         ], width=100, style={"width": "40%"}),
                         dbc.Col([
                             html.Div([
-                                dcc.Input(id='color-by-feature-dist-{}'.format(plot_num), value=DEFAULT_GENE)
+                                #dcc.Input(id='color-by-feature-dist-{}'.format(plot_num), value=DEFAULT_GENE)
+                                dcc.Dropdown(
+                                    options=[
+                                        {'label': gene, 'value': gene}
+                                        for gene in load_data.load_genes_sorted(DEFAULT_TUMOR_1)
+                                    ],
+                                    id='color-by-feature-dist-{}'.format(plot_num)
+                                )
                             ], id='color-by-feature-container-dist-{}'.format(plot_num))
                         ])
                     ])

@@ -18,7 +18,7 @@ FIG_DIM = 500
 # Default settings
 DEFAULT_NUM_DIM = 2
 DEFAULT_ALGO = 'umap'
-DEFAULT_GENE = 'SOX10'
+DEFAULT_GENE = 'GFAP'
 DEFAULT_TUMOR_1 = 'GSE70630.MGH124.10x'
 DEFAULT_TUMOR_2 = 'GSE70630.MGH124.10x'
 
@@ -270,7 +270,15 @@ def build_feature_category_selector(idd):
 
 def build_features_selector(idd, tumor, res, category):
     if category == 'gene':
-        return dcc.Input(id=idd, value=DEFAULT_GENE)
+        return dcc.Dropdown(
+            options=[
+                {'label': gene, 'value': gene}
+                for gene in load_data.load_genes_sorted(tumor)
+            ],
+            value=DEFAULT_GENE,
+            id=idd
+        )
+        #return dcc.Input(id=idd, value=DEFAULT_GENE)
     elif category == 'cluster':
         return dcc.Dropdown(
             options=[{'label': 'Cluster', 'value': 'Cluster'}],

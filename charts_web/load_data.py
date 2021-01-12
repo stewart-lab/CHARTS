@@ -40,6 +40,14 @@ def load_tumor_gene_names(tumor):
             for x in f['{}_gene_name'.format(tumor)][:]
         ])
 
+def load_genes_sorted(tumor):
+    with h5py.File(DB_LOC, 'r') as f:
+        return sorted([
+            str(x)[2:-1]
+            for x in f['per_tumor/{}/gene_name'.format(tumor)][:]
+        ])
+
+
 def hover_texts(tumor, res, cells):
     with h5py.File(DB_LOC, 'r') as f:
         cells = [

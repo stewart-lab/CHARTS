@@ -118,7 +118,7 @@ All results are written back into the `charts.h5` file. Note, that we can tell t
   
 ### Deleting a tumor from the database
 
-To delete a tumor from the CHARTS database, one can use the `charts_pipeline/delete_tumor.py` script. Specifically, to delete a tumor, run:
+To delete a tumor from the CHARTS database, one can use the `delete_tumor.py` script. Specifically, to delete a tumor, run:
 
 `python delete_tumor.py <charts.h5 location> <tumor name>`
 

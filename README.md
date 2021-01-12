@@ -1,6 +1,8 @@
 # CHARTS: Characterizing Tumor Subpopulations
 
-CHARTS is a web application, and associated backened analysis pipeline, for exploring publicly available single-cell RNA-seq data from human tumors. 
+CHARTS is a web application, and associated backened analysis pipeline, for exploring publicly available single-cell RNA-seq data from human tumors. For more details, please see the publication:
+
+Bernstein, M.N., Ni, Z., Collins, M., Burkard, M.E., Kendziorski, C., Stewart, R. (2020). CHARTS: A web application for characterizing and comparing tumor subpopulations in publicly available single-cell RNA-seq datasets. *bioRxiv*. [https://doi.org/10.1101/2020.09.23.310441](https://doi.org/10.1101/2020.09.23.310441)
 
 ## Running the CHARTS web application locally
 

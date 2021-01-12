@@ -35,6 +35,16 @@ def main():
     tumor_set = tumor_sets_str.split(',')
     print('Tumor set: ', tumor_set)
 
+    if not overwrite:
+        found = 0
+        with h5py.File(h5_f, 'r+') as f:
+            for tumor in tumor_set:
+                if 'malignancy_score' in f['per_tumor/{}/'.format(tumor)].keys():
+                    found += 1
+        if found == len(tumor_set):
+            print('Found malignancy scores for all tumors in tumor set {}. Skipping malignancy score calculation...'.format(tumor_set_name))
+        return
+
     # Map each chromosome to its genes and sort the genes
     # within each chromosome
     df_gene_loc = pd.read_csv('gene_locations.tsv', index_col=0, sep='\t')
@@ -191,7 +201,7 @@ def main():
     print("Clustering tumors...")
     sc.pp.pca(ad)
     sc.pp.neighbors(ad)
-    sc.tl.leiden(ad, resolution=4.0)
+    sc.tl.leiden(ad, resolution=1.0)
 
     if options.log_dir:
         sc.tl.umap(ad)

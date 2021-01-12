@@ -1,4 +1,5 @@
 #
+from os.path import join
 
 configfile: 'config.json'
 
@@ -52,9 +53,9 @@ def _dim_reduc_cmd():
 
 rule dim_reduc:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'dim_reduc_log.txt'
+        join(config['log_dir'], 'dim_reduc_log.txt')
     run:
         cmd=_dim_reduc_cmd()
         shell(cmd)
@@ -230,12 +231,18 @@ def _get_study_to_tumors():
         j = json.load(f)
         return j['study_to_tumors']
 
+def _malig_score_cmd():
+    if REWRITE:
+        return 'python classify_malignant.py -w -l {log} {{input}} {tumors} {study}'
+    else:
+        return 'python classify_malignant.py -l {log} {{input}} {tumors} {study}'
+
 rule classify_malignant:
     input:
         '{}/{}'.format(config['db_loc'], 'charts.h5')
     run:
         cmds = [
-            'python classify_malignant.py -w -l {log} {{input}} {tumors} {study}'.format(
+             _malig_score_cmd().format(
                 study=study, 
                 tumors=','.join(tumors),
                 log= config['log_dir']

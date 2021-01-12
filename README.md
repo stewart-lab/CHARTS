@@ -86,13 +86,43 @@ For each new tumor added to the dataset, update the tumor metadata file located 
 
 Note, the pipeline will run fine if a field is blank.  For the example data in [example/GSE70630_MGH36_MGH53.tsv.gz](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53.tsv.gz), see [example/GSE70630_MGH36_MGH53_metadata.json](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53_metadata.json) for example metadata to add to `charts_db/tumor_metadata.json`.
 
-### 4. Define tumor-specific pipeline parameters
+#### 4. Define tumor-specific pipeline parameters
 
 The file [charts_pipeline/tumor_parameters.json](https://github.com/stewart-lab/CHARTS/blob/master/charts_pipeline/tumor_parameters.json) stores tumor-specific parameters. There is one particular piece of data that must be added to this file for the CHARTS pipeline to run: the group of tumors to consider when calculating the malignancy scores.  Specifically, the malignancy score calculation looks at multiple tumors from a single study and attempts to find cells whose genomic alterations are unique to its tumor. The idea here is that each individual tumor is associated with a relatively unique copy-number profile and thus, malignant cells' copy number profiles should cluster with only cells from the same tumor.  Thus, we must supply the CHARTS pipeline with the group of tumors that will be considered in unison. Each group is stored in the `study_to_tumors` field. In this field, each key is the name of a study and the values are all of the datasets included in that study that will be considered in unison for detecting malignant cells.
 
-#### Running the computational pipeline
+For the example dataset in [example/GSE70630_MGH36_MGH53.tsv.gz](https://github.com/stewart-lab/CHARTS/blob/master/example/GSE70630_MGH36_MGH53.tsv.gz), one would add the following to the `study_to_tumors` field:
 
-Once the data is loaded in the database, the CHARTS pipeline can then be executed. The CHARTS pipeline is implemented via the Snakemake pipeline specified in `charts_pipeline/Snakefile`.
+```
+"my_study": [
+    "My_Tumor_1",
+    "My_Tumor_2"
+]
+``` 
+
+#### 5. Running the computational pipeline
+
+Once the data is loaded into the database, and all metadata and parameters are specified, the CHARTS pipeline can then be executed. The CHARTS pipeline is implemented using Snakemake and stored in `charts_pipeline/Snakefile`. To run the Snakemake pipeline, execute the following command:
+
+`snakemake`
+
+The pipeline will automatically detect which tumors have yet to be processed in the `charts.h5` file and will process those tumors. Processing each tumor entails the following steps:
+
+1. Perform dimensionality reduction on each tumor using both [UMAP](https://arxiv.org/abs/1802.03426) and [PHATE](https://doi.org/10.1038/s41587-019-0336-3) in two and three dimensions.
+2. Cluster each tumor. Each tumor is clustered at three levels of granularity. 
+3. Classify the cell type of each cluster. Classification is performed for clusters at all three cluster granularities.
+4. Compute the gene set enrichment of each cluster using [GSVA](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7). GSVA is performed on all clusters at all three cluster granularities.
+5. Compute the malignant score of each cell. 
+6. Compute differentially expressed (DE) genes between each cluster and the remaining clusters in the tumor. DE genes are computed for all clusters at all three cluster granularities.
+
+All results are written back into the `charts.h5` file. Note, that we can tell the pipeline to re-process *all* of the tumors in the charts.h5 if we set the `OVERWRITE` variable to True at the top of the Snakefile. Reprocessing all of the tumors may take several hours.
+  
+### Deleting a tumor from the database
+
+To delete a tumor from the CHARTS database, one can use the `charts_pipeline/delete_tumor.py` script. Specifically, to delete a tumor, run:
+
+`python delete_tumor.py <charts.h5 location> <tumor name>`
+
+
 
 
  

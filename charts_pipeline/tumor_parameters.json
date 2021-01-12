@@ -1627,7 +1627,7 @@
             ]
         }
     },
-    "study_to_tumors_HOLD": {
+    "study_to_tumors": {
         "GSE103224": [
             "PJ016",
             "PJ017",
@@ -1859,9 +1859,7 @@
             "GSE139829.UMM062",
             "GSE139829.UMM065",
             "GSE139829.BSSR0022"
-        ]
-    },
-    "study_to_tumors": {
+        ],
         "GSE134520": [
             "GSE134520.EGC"
         ],

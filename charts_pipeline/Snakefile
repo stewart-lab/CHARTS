@@ -8,35 +8,55 @@ configfile: 'config.json'
 # process tumors that have yet to be processed.
 REWRITE = False
 
+rule all:
+    input:
+        join(config['log_dir'], 'cluster_res_0_5_log.txt'),
+        join(config['log_dir'], 'cluster_res_1_log.txt'),
+        join(config['log_dir'], 'cluster_res_2_log.txt'),
+        join(config['log_dir'], 'dim_reduc_log.txt'),
+        join(config['log_dir'], 'cell_type_res_0_5_log.txt'),
+        join(config['log_dir'], 'cell_type_res_1_log.txt'),
+        join(config['log_dir'], 'cell_type_res_2_log.txt'),
+        join(config['log_dir'], 'gsva_cancersea_res_0_5_log.txt'),
+        join(config['log_dir'], 'gsva_cancersea_res_1_log.txt'),
+        join(config['log_dir'], 'gsva_cancersea_res_2_log.txt'),
+        join(config['log_dir'], 'gsva_hallmark_0_5_log.txt'),
+        join(config['log_dir'], 'gsva_hallmark_1_log.txt'),
+        join(config['log_dir'], 'gsva_hallmark_2_log.txt'),
+        join(config['log_dir'], 'malignant_classification_log.txt'),
+        join(config['log_dir'], 'de_res_0_5_log.txt'),
+        join(config['log_dir'], 'de_res_1_log.txt'),
+        join(config['log_dir'], 'de_res_2_log.txt')       
+
 def _cluster_cmd():
     if REWRITE:
-        return 'python cluster.py -w -r {res} {{input}} > {{output}}'
+        return 'python cluster.py -w -r {res} {{input}} | tee {{output}}'
     else:
-        return 'python cluster.py -r {res} {{input}} > {{output}}'
+        return 'python cluster.py -r {res} {{input}} | tee {{output}}'
 
 rule cluster_res_0_5:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'cluster_res_0_5_log.txt'
+        join(config['log_dir'], 'cluster_res_0_5_log.txt')
     run:
         cmd= _cluster_cmd().format(res=0.5)
         shell(cmd)
 
 rule cluster_res_1:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'cluster_res_1_log.txt'
+        join(config['log_dir'], 'cluster_res_1_log.txt')
     run:
         cmd= _cluster_cmd().format(res=1.0)
         shell(cmd)
 
 rule cluster_res_2:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        joint(config['db_loc'], 'charts.h5')
     output:
-        'cluster_res_4_log.txt'
+        join(config['log_dir'], 'cluster_res_2_log.txt')
     run:
         cmd= _cluster_cmd().format(res=2.0)
         shell(cmd)
@@ -47,9 +67,9 @@ rule cluster_res_2:
 
 def _dim_reduc_cmd():
     if REWRITE:
-        return 'python dim_reduc_per_tumor.py -w {input} > {output}'
+        return 'python dim_reduc_per_tumor.py -w {input} | tee {output}'
     else:
-        return 'python dim_reduc_per_tumor.py {input} > {output}'
+        return 'python dim_reduc_per_tumor.py {input} | tee {output}'
 
 rule dim_reduc:
     input:
@@ -66,16 +86,16 @@ rule dim_reduc:
 
 def _cell_type_cmd():
     if REWRITE:
-        return 'python cell_type_classification.py -r {res} -w {{input}} {tmp}/cello_models {tum_params}' # > {{output}} 2> {{output}}'
+        return 'python cell_type_classification.py -r {res} -w {{input}} {tmp}/cello_models {tum_params} | tee {{output}}'
     else:
-        return 'python cell_type_classification.py -r {res} {{input}} {tmp}/cello_models {tum_params}' # > {{output}} 2> {{output}}'
+        return 'python cell_type_classification.py -r {res} {{input}} {tmp}/cello_models {tum_params} | tee {{output}}'
 
 
 rule cell_type_res_0_5:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'cell_type_res_0_5_log.txt'
+        join(config['log_dir'], 'cell_type_res_0_5_log.txt')
     run:
         cmd=_cell_type_cmd().format(
             res='0.5',
@@ -87,9 +107,9 @@ rule cell_type_res_0_5:
 
 rule cell_type_res_1:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'cell_type_res_1_log.txt'
+        join(config['log_dir'],'cell_type_res_1_log.txt')
     run:
         cmd=_cell_type_cmd().format(
             res='1',
@@ -101,26 +121,12 @@ rule cell_type_res_1:
 
 rule cell_type_res_2:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'cell_type_res_2_log.txt'
+        join(config['log_dir'], 'cell_type_res_2_log.txt')
     run:
         cmd=_cell_type_cmd().format(
             res='2',
-            tmp=config['tmp_dir'],
-            tum_params=config['tumor_parameters']
-        )
-        shell(cmd)
-
-
-rule cell_type_res_4:
-    input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
-    output:
-        'cell_type_res_4_log.txt'
-    run:
-        cmd=_cell_type_cmd().format(
-            res='4',
             tmp=config['tmp_dir'],
             tum_params=config['tumor_parameters']
         )
@@ -132,15 +138,15 @@ rule cell_type_res_4:
 
 def _gsva_cancersea_cmd():
     if REWRITE:
-        return 'python gsva.py -r {res} -w {{input}} {db_loc}/gene_sets/CancerSEA.gmt cancersea'
+        return 'python gsva.py -r {res} -w {{input}} {db_loc}/gene_sets/CancerSEA.gmt cancersea | tee {{output}}'
     else:
-        return 'python gsva.py -r {res} {{input}} {db_loc}/gene_sets/CancerSEA.gmt cancersea'
+        return 'python gsva.py -r {res} {{input}} {db_loc}/gene_sets/CancerSEA.gmt cancersea | tee {{output}}'
 
 rule gsva_cancersea_res_0_5:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'gsva_cancersea_res_1_log.txt'
+        join(config['log_dir'], 'gsva_cancersea_res_0_5_log.txt')
     run:
         cmd=_gsva_cancersea_cmd().format(
             res='0.5',
@@ -151,9 +157,9 @@ rule gsva_cancersea_res_0_5:
 
 rule gsva_cancersea_res_1:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'gsva_cancersea_res_1_log.txt'
+        join(config['log_dir'], 'gsva_cancersea_res_1_log.txt')
     run:
         cmd=_gsva_cancersea_cmd().format(
             res='1',
@@ -164,9 +170,9 @@ rule gsva_cancersea_res_1:
 
 rule gsva_cancersea_res_2:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'gsva_cancersea_res_2_log.txt'
+        join(config['log_dir'], 'gsva_cancersea_res_2_log.txt')
     run:
         cmd=_gsva_cancersea_cmd().format(
             res='2',
@@ -181,15 +187,15 @@ rule gsva_cancersea_res_2:
 
 def _gsva_hallmark_cmd():
     if REWRITE:
-        return 'python gsva.py -r {res} -w {{input}} {db_loc}/gene_sets/h.all.v7.1.symbols.gmt hallmark'
+        return 'python gsva.py -r {res} -w {{input}} {db_loc}/gene_sets/h.all.v7.1.symbols.gmt hallmark | tee {{output}}'
     else:
-        return 'python gsva.py -r {res} {{input}} {db_loc}/gene_sets/h.all.v7.1.symbols.gmt hallmark'
+        return 'python gsva.py -r {res} {{input}} {db_loc}/gene_sets/h.all.v7.1.symbols.gmt hallmark | tee {{output}}'
 
 rule gsva_hallmark_res_0_5:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'gsva_hallmark_log.txt'
+        join(config['log_dir'], 'gsva_hallmark_0_5_log.txt')
     run:
         cmd=_gsva_hallmark_cmd().format(
             res='0.5',
@@ -199,9 +205,9 @@ rule gsva_hallmark_res_0_5:
 
 rule gsva_hallmark_res_1:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'gsva_hallmark_log.txt'
+        join(config['log_dir'], 'gsva_hallmark_1_log.txt')
     run:
         cmd=_gsva_hallmark_cmd().format(
             res='1',
@@ -211,9 +217,9 @@ rule gsva_hallmark_res_1:
 
 rule gsva_hallmark_res_2:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
     output:
-        'gsva_hallmark_log.txt'
+        join(config['log_dir'], 'gsva_hallmark_2_log.txt')
     run:
         cmd=_gsva_hallmark_cmd().format(
             res='2',
@@ -233,13 +239,15 @@ def _get_study_to_tumors():
 
 def _malig_score_cmd():
     if REWRITE:
-        return 'python classify_malignant.py -w -l {log} {{input}} {tumors} {study}'
+        return 'python classify_malignant.py -w -l {log} {{input}} {tumors} {study} | tee {{output}}'
     else:
-        return 'python classify_malignant.py -l {log} {{input}} {tumors} {study}'
+        return 'python classify_malignant.py -l {log} {{input}} {tumors} {study} | tee {{output}}'
 
 rule classify_malignant:
     input:
-        '{}/{}'.format(config['db_loc'], 'charts.h5')
+        join(config['db_loc'], 'charts.h5')
+    output:
+        join(config['log_dir'], 'malignant_classification_log.txt')
     run:
         cmds = [
              _malig_score_cmd().format(
@@ -258,28 +266,43 @@ rule classify_malignant:
 ###############################################################
 
 rule diff_expr_res_0_5:
+    input:
+        join(config['db_loc'], 'charts.h5')
+    output:
+        join(config['log_dir'], 'de_res_0_5_log.txt')
     run:
         cmds = [
-            'python de.py -w -r 0.5 {}/{}'.format(config['db_loc'], 'charts.h5')
+            'python de.py -w -r 0.5 {input} | tee {output}'
         ]
         for c in cmds:
             shell("echo '{}'".format(c))
             shell(c)
 
 rule diff_expr_res_1:
+    input:
+        join(config['db_loc'], 'charts.h5')
+    output:
+        join(config['log_dir'], 'de_res_1_log.txt')
     run:
         cmds = [
-            'python de.py -w -r 1 {}/{}'.format(config['db_loc'], 'charts.h5')
+            'python de.py -w -r 1 {input} | tee {output}'
         ]
         for c in cmds:
             shell("echo '{}'".format(c))
             shell(c)
 
 rule diff_expr_res_2:
+    input:
+        join(config['db_loc'], 'charts.h5')
+    output:
+        join(config['log_dir'], 'de_res_2_log.txt')
     run:
         cmds = [
-            'python de.py -w -r 2 {}/{}'.format(config['db_loc'], 'charts.h5')
+            'python de.py -w -r 2 {input} | tee {output}'
         ]
         for c in cmds:
             shell("echo '{}'".format(c))
             shell(c)
+
+
+
